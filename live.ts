@@ -273,6 +273,7 @@ async function runOneWindow() {
       redeemed = true;
     } catch (e: any) {
       lastErr = String(e?.message ?? e).slice(0, 120);
+      if (lastErr.includes("InsufficientBalance")) { log("redeem: balance not releaseable yet (escrow lag) — deferring to sweep"); write({ ev: "redeem_pending", mkid: String(mkid).slice(-6), err: lastErr }); redeemed = true; break; }
       if (!lastErr.includes("unresolved")) log(`redeem err: ${lastErr}`);
     }
   }
