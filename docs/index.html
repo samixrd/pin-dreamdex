@@ -66,7 +66,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
   </div>
   <div class="meta">
     <span class="livechip"><span class="pulse"></span> recording live</span><br>
-    0x2763…197a · venue 6797…a28c<br>2026-09-11 12:58 UTC
+    0x2763…197a · venue 6797…a28c<br>2026-09-11 13:00 UTC
   </div>
 </header>
 <nav><a href="#overview">Overview</a><a href="#edge">Edge</a><a href="#hazard">Hazard</a><a href="#ledger">Ledger</a><span class="nsep"></span><a href="#about">Provenance</a></nav>
@@ -86,7 +86,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <div class="grid">
   <div class="card"><div class="v">9,909.60 <small>tUSDC</small></div><div class="l">wallet balance now (eth_call)</div></div>
   <div class="card"><div class="v">-90.40 <small>tUSDC</small></div><div class="l">net vs 10,000 faucet grant</div></div>
-  <div class="card"><div class="v">4</div><div class="l">windows closed w/ settle bookend</div></div>
+  <div class="card"><div class="v">5</div><div class="l">windows closed w/ settle bookend</div></div>
   <div class="card"><div class="v">8</div><div class="l">on-chain claims + merges</div></div>
 </div>
 <div class="sub">net-vs-grant is the only number that cannot be faked: money in = public faucet 10,000 tUSDC; money out = current ERC-20 balance of 0x2763…197a read via eth_call on the public Somnia RPC. Gas (STT) excluded; unsettled held positions ≈ 393 contracts not yet counted as collateral.</div>
@@ -146,6 +146,8 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <div class="sub">https://shannon-explorer.somnia.network/tx/…</div>
 <div class="scroll"><table>
 <tr><th>time</th><th>event</th><th>detail</th><th>tx / id</th></tr>
+<tr><td class='dim'>09-11 13:00:14</td><td style='color:#888'>WINDOW_SETTLE</td><td>mkid:01a2c7</td><td><span class='dim'></span></td></tr>
+<tr><td class='dim'>09-11 13:00:13</td><td style='color:#ff7b00'>PEND</td><td>mkid:01a2c7</td><td><span class='dim'></span></td></tr>
 <tr><td class='dim'>09-11 12:50:27</td><td style='color:#ff006a'>FLATTEN</td><td>side:YES</td><td><span class='dim'></span></td></tr>
 <tr><td class='dim'>09-11 12:50:20</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>1106804644422574…</span></td></tr>
 <tr><td class='dim'>09-11 12:50:06</td><td style='color:#771be8'>REST</td><td>mkid:01a2c7 kind:NO qty:5 px:0.2245</td><td><a href='https://shannon-explorer.somnia.network/tx/0x9c95d630bc2e2d19f379eda40addf315c751ec7e584c51f2296c39ca6905f295' target='_blank' title='0x9c95d630bc2e2d19f379eda40addf315c751ec7e584c51f2296c39ca6905f295'>0x9c95d630bc2e2d…</a></td></tr>
@@ -184,8 +186,6 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <tr><td class='dim'>09-11 12:35:18</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>9776774359066063…</span></td></tr>
 <tr><td class='dim'>09-11 12:35:03</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:NO qty:5 px:0.3735</td><td><a href='https://shannon-explorer.somnia.network/tx/0x5af8a79161ad2ea15f701f751090044c5dd85915af42717c33f5e5bf445ecb44' target='_blank' title='0x5af8a79161ad2ea15f701f751090044c5dd85915af42717c33f5e5bf445ecb44'>0x5af8a79161ad2e…</a></td></tr>
 <tr><td class='dim'>09-11 12:35:03</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:YES qty:5 px:0.616499</td><td><a href='https://shannon-explorer.somnia.network/tx/0x9ad9b7e99553fd7449f23c0a6e6ef6a2e8c06228b7350938ab7ac9f8243d2845' target='_blank' title='0x9ad9b7e99553fd7449f23c0a6e6ef6a2e8c06228b7350938ab7ac9f8243d2845'>0x9ad9b7e99553fd…</a></td></tr>
-<tr><td class='dim'>09-11 12:34:43</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:NO qty:5 px:0.3715</td><td><a href='https://shannon-explorer.somnia.network/tx/0xd9c2843677a8263aa71399856702c9b39c1d22206ad97f87b57a6699e807e1b3' target='_blank' title='0xd9c2843677a8263aa71399856702c9b39c1d22206ad97f87b57a6699e807e1b3'>0xd9c2843677a826…</a></td></tr>
-<tr><td class='dim'>09-11 12:34:43</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:YES qty:5 px:0.618499</td><td><a href='https://shannon-explorer.somnia.network/tx/0xdb25b711b139ad63f65ce311a4490d9086d9536db876dc368d8d0ddc50c5529f' target='_blank' title='0xdb25b711b139ad63f65ce311a4490d9086d9536db876dc368d8d0ddc50c5529f'>0xdb25b711b139ad…</a></td></tr>
 </table></div>
 </div>
 <div>
