@@ -1,6 +1,6 @@
 # Reality check: take tx hashes from our ledger, fetch receipts from the PUBLIC Somnia RPC.
 # If these transactions exist on-chain with our wallet as sender, the dashboard is real.
-import json, subprocess, sys
+import json, subprocess, sys, os
 
 RPC = "https://api.infra.testnet.somnia.network"
 PIN = "0x27633fEC5EdA3F0298BfFa24018dAf54dd18197A"
@@ -11,7 +11,9 @@ def rpc(method, params):
                        capture_output=True, text=True)
     return json.loads(r.stdout).get("result")
 
-led = [json.loads(l) for l in open("data/live_ledger.jsonl", encoding="utf-8") if l.strip()]
+led = [json.loads(l) for l in open("data/live_ledger.jsonl", encoding="utf-8") if l.strip()] \
+      if os.path.exists("data/live_ledger.jsonl") else \
+      json.load(open("data/published/live_ledger.json", encoding="utf-8"))
 txs = [e for e in led if e.get("tx") and str(e["tx"]).startswith("0x") and len(str(e["tx"])) > 40]
 print(f"ledger events: {len(led)} | with tx hash: {len(txs)}")
 

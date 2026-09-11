@@ -112,6 +112,58 @@ python dashboard.py                              # local render of the monitor
 
 Testnet tUSDC is self-serve: public `faucet(uint256)` on the token, 10k/call (no Telegram needed).
 
+## Verify it yourself (judge path — no trust required)
+
+Everything below is checkable from the public repo + public chain in ~10 minutes.
+
+```bash
+git clone https://github.com/samixrd/pin-dreamdex && cd pin-dreamdex
+
+# 1. MONEY IS REAL. The dashboard's wallet card is a live eth_call, and every ledger
+#    tx hash resolves on the public Shannon RPC:
+python reality_check.py        # reads data/live_ledger.jsonl, verifies receipts on-chain
+# or manually, with any hash from the ledger:
+curl -s https://api.infra.testnet.somnia.network -H 'content-type: application/json' \
+  -d '{"jsonrpc":"2.0","id":1,"method":"eth_getTransactionByHash",
+       "params":["<paste-a-hash-from-data/published/live_ledger.json>"]}'
+#    -> "from": 0x27633fEC5EdA3F0298BfFa24018dAf54dd18197A  (PIN's own burner wallet)
+#    -> block, gasUsed, status 0x1. Or click any hash in https://samixrd.github.io/pin-dreamdex/
+
+# 2. NO SYNTHETIC NUMBERS. Every published figure regenerates from raw files:
+python publish.py && python dashboard.py && python audit.py
+#    audit.py cross-checks each dashboard value against its source file AND spot-checks a
+#    random tx hash against the public RPC (sender must equal the PIN wallet). 24 checks.
+
+# 3. THE CLAIMS ARE REPRODUCIBLE FROM PUBLIC VENUE DATA:
+python pxdeep.py && npx tsx backfill.ts 30      # re-record the rail + settlement history
+python sigma_est2.py                            # σ ≈ 0.013–0.015 re-emerges from books alone
+python hazard.py && python sweep_final.py       # hazard table + frontier re-derive
+
+# 4. THE YIELD MECHANIC IS NOT OUR INVENTION:
+#    https://docs.dreamdex.io/trading/common/yield-algorithm  (the exp(−d²/2σ²) score, and
+#    "no early-cancel penalty")  vs  https://github.com/somnia-chain/dreamdex-bot-kit
+#    (packages/core/src/yield.ts + strategies/yield-optimizer/README.md: σ is not queryable,
+#    operators hand-set YO_SIGMA_RAW, and that whole half exists only for SPOT — not EC).
+
+# 5. NOTHING CRITICAL IS PUBLIC:
+python secretscan.py
+#    scans every tracked file + all git history for private keys, hostnames, IPs, cloud IDs,
+#    tokens. Allow-lists 0x-prefixed on-chain hashes (public by nature). Expect: zero hits.
+```
+
+What we deliberately do NOT claim: no testnet OI-yield payout is observable yet, so the
+"yield score race" section reports *share of the race*, replayed from real books — never
+dollars. Trade PnL on the frontier is replay; live PnL is the wallet delta (net-vs-grant card).
+
+## Security notes
+
+- `live.ts` only ever reads a key from `PIN_KEY_FILE` / `data/pin_key.txt` (gitignored, chmod 600).
+  No key, IP, hostname, cloud project ID, or token appears in tracked files or git history —
+  `secretscan.py` enforces it. The deployed monitor shows a truncated public address only.
+- Hard rails are compiled in, not env-tunable: 60 tUSDC/window, 200 cumulative, wallet balance
+  floor (halt), mandatory `expireTimestampNs`, post-only, venue + on-chain-status gate.
+- `.env.example` documents every knob; copy to `.env` and edit. The repo never contains `.env`.
+
 ## Feedback report
 
 See `FEEDBACK.md` — five verified SDK/docs traps we hit building this (all reproducible).
