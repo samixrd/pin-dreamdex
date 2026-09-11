@@ -41,7 +41,7 @@ on Somnia) that:
 | Oracle resolves outcomes that public 1-min feeds **cannot reproduce**: 100% agreement ≥25bp from the line, 64% at 5–10bp, 36% <2bp | `analyze3.py`, 136-window test |
 | Adverse selection has **3 regimes**: touch pays −1.5¢ markout, 1–2¢ band *earns* +1.8¢ (trend flow), ≥3¢ turns toxic (33–47% loss tails) | 2,170 reconstructed maker fills |
 | σ bracketed from public data: incumbent ladder at 1–2.25¢ ⇒ σ ∈ [0.005, 0.0225] under the ops e^−½ convention — the estimator is our own | `sigma_est.py` |
-| Policy frontier (σ=0.01, q200): touch+kill(0.3) = **+81 mean, worst −10.5** vs naive-2¢ **+20, worst −56** per window | `sweep_sigma.py` |
+| Policy frontier (q200): **touch + hazard-kill(0.6) = +136.7 mean, worst window 0.0, 81.5% yield share** (σ=0.005) vs naive-2¢ **+46.8, worst −56.4, 0.2%** | `sweep_final.py`, `data/published/sweep_final.json` |
 | Empirical pin hazard: P(settle ≤10bp from line) = 47–59% right after open, dropping to 3% once 2bp√min of escape — the kill rule is *calibrated on this table*, not on textbook BM | `data/published/hazard_table.json` |
 | Live money: 339 ledger events — orders placed, filled (incl. NO at 0.012 during a crash-through), flattened, merged, redeemed, all with tx hashes on Shannon | `data/published/live_ledger.json` |
 
