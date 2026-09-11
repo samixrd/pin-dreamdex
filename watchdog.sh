@@ -9,7 +9,7 @@ while [ "$(date +%s)" -lt "$END" ]; do
   eval "$(status | awk '{printf "%s=%s\n", $1, $2}')"
   [ "${collector:-0}" -eq 0 ] && { log "restart collector"; nohup npx tsx collector.ts >> data/collector.out 2>&1 & sleep 8; }
   [ "${paper:-0}" -eq 0 ]    && { log "restart paper";      nohup python paper.py >> data/paper.out 2>&1 & sleep 8; }
-  [ "${live:-0}" -eq 0 ]     && { log "restart live";       LIVE_DRY=0 LIVE_MAX_WINDOWS=40 nohup npx tsx live.ts >> data/live_runner.out 2>&1 & sleep 8; }
+  [ "${live:-0}" -eq 0 ]     && { log "restart live";       LIVE_DRY=0 LIVE_MAX_WINDOWS=200 nohup npx tsx live.ts >> data/live_runner.out 2>&1 & sleep 8; }
   if [ "${backfill:-0}" -eq 0 ] && ! grep -q "backfill complete" data/backfill.log 2>/dev/null; then
     log "restart backfill"; nohup npx tsx backfill.ts 30 >> data/backfill.out 2>&1 & sleep 8
   fi

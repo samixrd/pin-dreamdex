@@ -254,31 +254,29 @@ async function runOneWindow() {
     }
   } else log("DRY: would flatten now");
 
-  // ---- settlement + redeem winner ----
-  log("window closed; polling for settlement (≤150s)…");
-  let fin: any = null;
-  for (let t = 0; t < 15; t++) {
-    await sleep(10000);
-    const rows = await withTimeout(cl.listBinaryMarkets({ venueId: VENUE_ID, status: "Finalized", limit: 60 }), 20000);
-    fin = rows?.find((r: any) => r.marketId === mkid);
-    if (fin) break;
+  // ---- settlement + redeem: poll REDEEM itself (removes indexer finalization latency) ----
+  log("window closed; redeeming (retry loop ≤10min)…");
+  let redeemed = false, lastErr = "";
+  for (let t = 0; t < 40 && !redeemed; t++) {
+    await sleep(15000);
+    if (DRY) break;
+    try {
+      const bal: any = await withTimeout(ex.fetchBalance(), 15000);
+      const winSymA = sym, winSymB = sym.replace("#YES", "#NO");
+      const a = bal?.[sym]?.total ?? 0, b = bal?.[winSymB]?.total ?? 0;
+      if (!a && !b) { log("nothing to redeem (no inventory)"); redeemed = true; break; }
+      const side = a ? sym : winSymB;
+      const amt = a || b;
+      const r: any = await ex.redeem(base, amt);
+      write({ ev: "redeem", amt, side: side.endsWith("NO") ? "NO" : "YES", tx: r.hash, mkid: String(mkid).slice(-6) });
+      log(`redeemed ${amt} ${side.endsWith("NO") ? "NO" : "YES"} -> ${r.hash}`);
+      redeemed = true;
+    } catch (e: any) {
+      lastErr = String(e?.message ?? e).slice(0, 120);
+      if (!lastErr.includes("unresolved")) log(`redeem err: ${lastErr}`);
+    }
   }
-  if (!fin) { log("no finalized row yet — will redeem in next pass"); write({ ev: "no_settle", mkid: String(mkid).slice(-6) }); return spent; }
-  const winUp = fin.winningOutcome === 0;
-  log(`SETTLED …${String(mkid).slice(-6)} winner=${winUp ? "Up" : "Down"}`);
-  write({ ev: "settle", mkid: String(mkid).slice(-6), winner_up: winUp, trades: fin.tradeCount });
-  if (!DRY) {
-    const bal: any = await withTimeout(ex.fetchBalance(), 15000);
-    const winSym = winUp ? sym : sym.replace("#YES", "#NO");
-    const amt = bal?.[winSym]?.total ?? 0;
-    if (amt > 0) {
-      try {
-        const r: any = await ex.redeem(base, amt);
-        write({ ev: "redeem", amt, tx: r.hash });
-        log(`redeemed ${amt} -> ${r.hash}`);
-      } catch (e: any) { write({ ev: "redeem_err", err: String(e?.message ?? e).slice(0, 160) }); log(`redeem err ${String(e?.message ?? e).slice(0, 140)}`); }
-    } else log("nothing to redeem (no fills)");
-  }
+  if (!redeemed && lastErr) write({ ev: "redeem_pending", mkid: String(mkid).slice(-6), err: lastErr });
   const balF: any = DRY ? null : await withTimeout(ex.fetchBalance(), 15000);
   log(`DONE | cycles=${cycles} fills=${fills} spent≈${spent.toFixed(2)} final tUSDC=${balF?.tUSDC?.free ?? balF?.["0x70a86d8842fb63c4ad2b7cdddf530ebf1bb25d8e"]?.free ?? "?"}`);
   return spent;

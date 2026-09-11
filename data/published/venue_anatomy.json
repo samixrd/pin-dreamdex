@@ -1,10 +1,10 @@
 {
- "markets_recorded": 364,
- "dead_markets_pct": 20.3,
- "five_min_markets": 261,
- "five_min_dead_pct": 23.0,
+ "markets_recorded": 400,
+ "dead_markets_pct": 18.5,
+ "five_min_markets": 287,
+ "five_min_dead_pct": 20.9,
  "median_top_maker_share": 1.0,
- "median_mint_pair_share": 0.493,
- "book_snapshots": 5389996,
+ "median_mint_pair_share": 0.5,
+ "book_snapshots": 6264341,
  "rail_candles_52d": 156153
 }

@@ -21,7 +21,7 @@ eval "$(status | awk '{printf "%s=%s\n", $1, $2}')"
 OUT=""
 [ "${collector:-0}" -eq 0 ] && { launch collector "" npx tsx collector.ts; OUT="$OUT collector"; }
 [ "${paper:-0}" -eq 0 ]    && { launch paper "" python paper.py; OUT="$OUT paper"; }
-[ "${live:-0}" -eq 0 ]     && { launch live "LIVE_DRY=0 LIVE_MAX_WINDOWS=40" npx tsx live.ts; OUT="$OUT live"; }
+[ "${live:-0}" -eq 0 ]     && { launch live "LIVE_DRY=0 LIVE_MAX_WINDOWS=200" npx tsx live.ts; OUT="$OUT live"; }
 if [ "${backfill:-0}" -eq 0 ] && ! grep -q "backfill complete" data/backfill.log 2>/dev/null; then
   launch backfill "" npx tsx backfill.ts 30; OUT="$OUT backfill"
 fi
