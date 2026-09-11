@@ -227,8 +227,8 @@ a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }
 {front_html}
 </div>
 <div>
-<h2>Yield score race — our share of the venue's OI subsidy</h2>
-<div class="sub">computed per second from rivals' own resting ladders in the recorded book (σ=0.01 · q200)</div>
+<h2>Yield score race — replayed, not paid</h2>
+<div class="sub">what share of the venue's score race our quotes <em>would</em> have accrued: rivals' ladders are from real recorded books, the weight is dreamDEX's published formula, σ=0.01 is a stated assumption · no testnet payout is observable yet, so we report share not dollars</div>
 {race_html}
 <div class="sub" style="margin-top:10px">the incumbent ladder's own config implies σ ∈ [0.005, 0.0225] — we bracket an unpublished venue parameter from public data (<span class="mono">sigma_est.py</span>)</div>
 </div>
