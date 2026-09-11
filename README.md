@@ -7,6 +7,9 @@ per market on-chain and is **not exposed by any API or SDK** — the official bo
 operators to hand-set `YO_SIGMA_RAW`. 80 hackathon projects traded this venue; none mentions
 this mechanic. PIN is the first market maker whose objective function contains it.
 
+**Live monitor:** https://samixrd.github.io/pin-dreamdex/ (auto-regenerates from the running
+stack every 90 s — tx hashes link straight to the Shannon explorer)
+
 ```
 fund → mint-a-pair two-sided bids at d from mid → accrue yield score per second (W-banded)
      → pin-hazard kill (empirically calibrated) → flatten before settle → redeem → decompose
