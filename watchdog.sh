@@ -14,6 +14,12 @@ while [ "$(date +%s)" -lt "$END" ]; do
     log "restart backfill"; nohup npx tsx backfill.ts 30 >> data/backfill.out 2>&1 & sleep 8
   fi
   python dashboard.py >> data/dashboard.out 2>&1
+  # publish dashboard to GitHub Pages (only when content changed)
+  if ! git diff --quiet --no-index data/dashboard.html docs/index.html 2>/dev/null; then
+    cp data/dashboard.html docs/index.html
+    git add docs/index.html && git commit -qm "pages: auto-refresh $(date -u +%H:%M)" && git push -q origin main
+    echo "$(date -u +%H:%M:%S) pages updated" >> data/watchdog.log
+  fi
   sleep 90
 done
 log "watchdog retiring"
