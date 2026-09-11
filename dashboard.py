@@ -142,9 +142,10 @@ if haz_rows:
             if c == "":
                 tds += "<td>—</td>"
             else:
-                a = max(0.06, min(1.0, float(c)))
+                v = float(c)
+                a = max(0.06, min(1.0, v))
                 fg = "#0a0a0a" if a > 0.35 else "#9ab03a"
-                tds += f"<td style='background:rgba(204,255,0,{a:.2f});color:{fg};text-align:center;font-weight:600'>{a:.2f}</td>"
+                tds += f"<td style='background:rgba(204,255,0,{a:.2f});color:{fg};text-align:center;font-weight:600'>{v:.2f}</td>"
         haz_html += f"<tr><td class='mono'>{k}</td><td class='dim'>{n}</td>{tds}</tr>"
     haz_html += "</table>"
 

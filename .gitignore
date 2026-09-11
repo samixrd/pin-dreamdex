@@ -30,3 +30,4 @@ data/supervisor.log
 # os junk
 .DS_Store
 Thumbs.db
+data/dashboard.html
