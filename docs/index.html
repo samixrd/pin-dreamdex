@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="60"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PIN — Yield-Aware Convergence MM · Somnia × dreamDEX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#0a0a0a; --bg2:#000; --surface:#101012; --raised:#161619;
+  --border:#1c1c1c; --border-strong:#2f2f2f;
+  --text:#f5f5f5; --dim:#8a8a93;
+  --purple:#771be8; --purple-glow:#771be855;
+  --acid:#ccff00; --cherry:#ff006a; --coral:#ea9990; --mint:#61ea7d; --orange:#ff7b00;
+}
+* { box-sizing:border-box; margin:0 }
+body { background:var(--bg); color:var(--text); font:13px/1.6 'Inter',sans-serif; font-variant-numeric:tabular-nums; min-height:100vh }
+.wrap { max-width:1280px; margin:0 auto; padding:0 26px 60px; position:relative }
+header { display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border-strong); padding:26px 0 18px }
+.logo { font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:700; letter-spacing:4px }
+.logo em { font-style:normal; color:var(--purple); text-shadow:0 0 24px var(--purple-glow) }
+.tagline { color:var(--dim); font-size:11.5px; max-width:520px }
+.livechip { display:inline-flex; gap:7px; align-items:center; font-size:11px; color:var(--acid); border:1px solid #ccff0033; padding:2px 9px; text-transform:uppercase; letter-spacing:1px }
+.pulse { width:7px; height:7px; background:var(--acid); border-radius:50%; animation:p 1.6s infinite }
+@keyframes p { 0%,100% { opacity:1 } 50% { opacity:.25 } }
+.meta { text-align:right; font-size:10.5px; color:var(--dim) }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:10px; margin:22px 0 }
+.card { background:var(--surface); border:1px solid var(--border); padding:14px 16px 12px; position:relative; overflow:hidden }
+.card .v { font-family:'Space Grotesk',sans-serif; font-size:23px; font-weight:500; letter-spacing:.2px; font-variant-numeric:tabular-nums }
+.card .v small { font-size:11px; color:var(--dim); font-weight:400 }
+.card .l { color:var(--dim); font-size:10px; text-transform:uppercase; letter-spacing:1.4px; margin-top:2px }
+h2 { font-size:12px; text-transform:uppercase; letter-spacing:2.4px; color:var(--coral); margin:34px 0 4px; display:flex; align-items:center; gap:10px }
+h2::after { content:""; flex:1; height:1px; background:var(--border-strong) }
+.sub { color:var(--dim); font-size:11px; margin-bottom:12px }
+.cols { display:grid; grid-template-columns:1fr 1fr; gap:26px }
+@media (max-width:900px) { .cols { grid-template-columns:1fr } }
+table { border-collapse:collapse; width:100%; font-size:11.5px }
+th { color:var(--dim); text-transform:uppercase; font-size:9.5px; letter-spacing:1.2px; font-weight:500; text-align:left; padding:6px 8px; border-bottom:1px solid var(--border-strong) }
+td { padding:5px 8px; border-bottom:1px solid var(--border) }
+.mono { font-family:'Inter',sans-serif }
+.dim { color:var(--dim) } .ok { color:var(--acid) } .bad { color:var(--cherry) }
+a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
+.scroll { max-height:340px; overflow-y:auto; border:1px solid var(--border); background:var(--bg2) }
+.scroll::-webkit-scrollbar { width:6px } .scroll::-webkit-scrollbar-thumb { background:var(--border-strong) }
+.frow { display:grid; grid-template-columns:88px 1fr 64px 1fr 64px 170px 170px; gap:8px; align-items:center; margin:8px 0; font-size:11px }
+.flabel { color:var(--dim) }
+.fbar,.fbar2 { height:14px; background:var(--surface); border:1px solid var(--border); position:relative }
+.fpin { position:absolute; inset:0 auto 0 0; background:linear-gradient(90deg,var(--purple),#9c4dff) }
+.fnaive { position:absolute; inset:0 auto 0 0; background:#3a3a40 }
+.fval { text-align:right; color:var(--acid); font-family:'Space Grotesk',sans-serif; font-variant-numeric:tabular-nums }
+.fval.dim { color:var(--dim) }
+.fworst { text-align:right }
+.race { display:grid; grid-template-columns:150px 1fr 54px; gap:10px; align-items:center; margin:7px 0; font-size:11px }
+.rname { color:var(--dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
+.rtrack { height:10px; background:var(--surface); border:1px solid var(--border) }
+.rfill { display:block; height:100%; background:linear-gradient(90deg,var(--acid),#8a9900) }
+.rpct { text-align:right; color:var(--acid); font-family:'Space Grotesk',sans-serif }
+.heat { color:#0a0a0a; background:var(--acid); text-align:center; font-weight:600 }
+.note { margin-top:26px; padding-top:14px; border-top:1px solid var(--border); color:var(--dim); font-size:10.5px; line-height:1.7 }
+.badge { display:inline-block; border:1px solid var(--border-strong); color:var(--dim); font-size:9.5px; padding:1px 7px; letter-spacing:1px; text-transform:uppercase }
+</style></head><body><div class="wrap">
+
+<header>
+  <div>
+    <div class="logo">P<em>◆</em>IN</div>
+    <div class="tagline">yield-aware convergence market maker · dreamdex event contracts · somnia shannon (50312)<br>
+    the venue pays makers exp(−d²/2σ²)·sec to rest — σ is unpublished — we estimate it, quote against it, and kill on its own settlement statistics</div>
+  </div>
+  <div class="meta">
+    <span class="livechip"><span class="pulse"></span> recording live</span><br>
+    0x2763…197a · venue 6797…a28c<br>2026-09-11 11:28 UTC
+  </div>
+</header>
+<nav><a href="#overview">Overview</a><a href="#edge">Edge</a><a href="#hazard">Hazard</a><a href="#ledger">Ledger</a><span class="nsep"></span><a href="#about">Provenance</a></nav>
+<section id="overview">
+<div class="grid">
+  <div class="card"><div class="v">90</div><div class="l">on-chain fills</div></div>
+  <div class="card"><div class="v">242.9 <small>tUSDC</small></div><div class="l">notional traded</div></div>
+  <div class="card"><div class="v">498</div><div class="l">orders rested</div></div>
+  <div class="card"><div class="v">5</div><div class="l">claims + merges</div></div>
+  <div class="card"><div class="v">74</div><div class="l">paper windows settled</div></div>
+  <div class="card"><div class="v">6,264,341</div><div class="l">book snapshots</div></div>
+  <div class="card"><div class="v">20.9<small>%</small></div><div class="l">5-min windows dead</div></div>
+  <div class="card"><div class="v">50<small>%</small></div><div class="l">fills are mint-a-pair</div></div>
+</div>
+</section>
+<section id="edge">
+<div class="cols">
+<div>
+<h2>Policy frontier — PnL / window</h2>
+<div class="sub"><span class="badge" style="color:var(--purple)">PIN touch+kill</span> vs <span class="badge">naive 2¢ maker</span> · q200 · replay on recorded books · trade PnL is σ-invariant by design; the σ-dependent term is yield share (shown per row)</div>
+
+<div class="frow">
+  <div class="flabel">σ=0.005</div>
+  <div class="fbar"><div class="fpin" style="width:100%"></div></div>
+  <div class="fval">+137</div>
+  <div class="fbar2"><div class="fnaive" style="width:34%"></div></div>
+  <div class="fval dim">+47</div>
+  <div class="fworst ok">worst +0 · yield 82%</div>
+  <div class="fworst bad">worst -56 · yield 0%</div>
+</div>
+<div class="frow">
+  <div class="flabel">σ=0.01</div>
+  <div class="fbar"><div class="fpin" style="width:100%"></div></div>
+  <div class="fval">+137</div>
+  <div class="fbar2"><div class="fnaive" style="width:34%"></div></div>
+  <div class="fval dim">+47</div>
+  <div class="fworst ok">worst +0 · yield 45%</div>
+  <div class="fworst bad">worst -56 · yield 13%</div>
+</div>
+<div class="frow">
+  <div class="flabel">σ=0.0225</div>
+  <div class="fbar"><div class="fpin" style="width:100%"></div></div>
+  <div class="fval">+137</div>
+  <div class="fbar2"><div class="fnaive" style="width:34%"></div></div>
+  <div class="fval dim">+47</div>
+  <div class="fworst ok">worst +0 · yield 19%</div>
+  <div class="fworst bad">worst -56 · yield 17%</div>
+</div>
+</div>
+<div>
+<h2>Yield score race — replayed, not paid</h2>
+<div class="sub">what share of the venue's score race our quotes <em>would</em> have accrued: rivals' ladders are from real recorded books, the weight is dreamDEX's published formula, σ=0.01 is a stated assumption · no testnet payout is observable yet, so we report share not dollars</div>
+<div class='race'><span class='rname'>q200-1t-pk0.0</span><span class='rtrack'><span class='rfill' style='width:48.5%'></span></span><span class='rpct'>48.5%</span></div><div class='race'><span class='rname'>q200-5t-pk0.0</span><span class='rtrack'><span class='rfill' style='width:45.5%'></span></span><span class='rpct'>45.5%</span></div><div class='race'><span class='rname'>q200-1t-pk0.6</span><span class='rtrack'><span class='rfill' style='width:44.8%'></span></span><span class='rpct'>44.8%</span></div><div class='race'><span class='rname'>q200-5t-pk0.6</span><span class='rtrack'><span class='rfill' style='width:41.8%'></span></span><span class='rpct'>41.8%</span></div><div class='race'><span class='rname'>q200-2c-pk0.0</span><span class='rtrack'><span class='rfill' style='width:14.1%'></span></span><span class='rpct'>14.1%</span></div><div class='race'><span class='rname'>q200-2c-pk0.6</span><span class='rtrack'><span class='rfill' style='width:13.1%'></span></span><span class='rpct'>13.1%</span></div><div class='race'><span class='rname'>q200-1t-pk0.35</span><span class='rtrack'><span class='rfill' style='width:3.8%'></span></span><span class='rpct'>3.8%</span></div><div class='race'><span class='rname'>q200-5t-pk0.35</span><span class='rtrack'><span class='rfill' style='width:3.4%'></span></span><span class='rpct'>3.4%</span></div>
+<div class="sub" style="margin-top:10px">the incumbent ladder's own config implies σ ∈ [0.005, 0.0225] — we bracket an unpublished venue parameter from public data (<span class="mono">sigma_est.py</span>)</div>
+</div>
+</div>
+</section>
+<section id="hazard">
+<h2>Empirical pin hazard — P(window settles within ε of its opening line)</h2>
+<div class="sub">learned from 52 days of oracle rail × 400 recorded windows · u = |ln(px/line)| / √(minutes remaining) — the kill rule fires above P≤10bp = 0.35, calibrated on THIS table, not textbook Brownian motion</div>
+<table><tr><th>state u = |r|/√t<sub>rem</sub></th><th>n</th><th>2bp</th><th>5bp</th><th>10bp</th><th>25bp</th><th>50bp</th></tr><tr><td class='mono'>0-0.0002</td><td class='dim'>210</td><td style='background:rgba(204,255,0,0.06);color:#9ab03a;text-align:center;font-weight:600'>0.06</td><td style='background:rgba(204,255,0,0.35);color:#9ab03a;text-align:center;font-weight:600'>0.35</td><td style='background:rgba(204,255,0,0.59);color:#0a0a0a;text-align:center;font-weight:600'>0.59</td><td style='background:rgba(204,255,0,0.91);color:#0a0a0a;text-align:center;font-weight:600'>0.91</td><td style='background:rgba(204,255,0,0.99);color:#0a0a0a;text-align:center;font-weight:600'>0.99</td></tr><tr><td class='mono'>0.0002-0.0005</td><td class='dim'>109</td><td style='background:rgba(204,255,0,0.07);color:#9ab03a;text-align:center;font-weight:600'>0.07</td><td style='background:rgba(204,255,0,0.31);color:#9ab03a;text-align:center;font-weight:600'>0.31</td><td style='background:rgba(204,255,0,0.48);color:#0a0a0a;text-align:center;font-weight:600'>0.48</td><td style='background:rgba(204,255,0,0.92);color:#0a0a0a;text-align:center;font-weight:600'>0.92</td><td style='background:rgba(204,255,0,0.99);color:#0a0a0a;text-align:center;font-weight:600'>0.99</td></tr><tr><td class='mono'>0.0005-0.001</td><td class='dim'>111</td><td style='background:rgba(204,255,0,0.06);color:#9ab03a;text-align:center;font-weight:600'>0.06</td><td style='background:rgba(204,255,0,0.24);color:#9ab03a;text-align:center;font-weight:600'>0.24</td><td style='background:rgba(204,255,0,0.49);color:#0a0a0a;text-align:center;font-weight:600'>0.49</td><td style='background:rgba(204,255,0,0.84);color:#0a0a0a;text-align:center;font-weight:600'>0.84</td><td style='background:rgba(204,255,0,1.00);color:#0a0a0a;text-align:center;font-weight:600'>1.00</td></tr><tr><td class='mono'>0.001-0.002</td><td class='dim'>69</td><td style='background:rgba(204,255,0,0.06);color:#9ab03a;text-align:center;font-weight:600'>0.06</td><td style='background:rgba(204,255,0,0.14);color:#9ab03a;text-align:center;font-weight:600'>0.14</td><td style='background:rgba(204,255,0,0.28);color:#9ab03a;text-align:center;font-weight:600'>0.28</td><td style='background:rgba(204,255,0,0.72);color:#0a0a0a;text-align:center;font-weight:600'>0.72</td><td style='background:rgba(204,255,0,0.97);color:#0a0a0a;text-align:center;font-weight:600'>0.97</td></tr><tr><td class='mono'>0.002-0.004</td><td class='dim'>33</td><td style='background:rgba(204,255,0,0.06);color:#9ab03a;text-align:center;font-weight:600'>0.06</td><td style='background:rgba(204,255,0,0.06);color:#9ab03a;text-align:center;font-weight:600'>0.06</td><td style='background:rgba(204,255,0,0.06);color:#9ab03a;text-align:center;font-weight:600'>0.06</td><td style='background:rgba(204,255,0,0.52);color:#0a0a0a;text-align:center;font-weight:600'>0.52</td><td style='background:rgba(204,255,0,0.97);color:#0a0a0a;text-align:center;font-weight:600'>0.97</td></tr></table>
+
+</section>
+<section id="ledger">
+<div class="cols">
+<div>
+<h2>Live money ledger — every event is a transaction</h2>
+<div class="sub">https://shannon-explorer.somnia.network/tx/…</div>
+<div class="scroll"><table>
+<tr><th>time</th><th>event</th><th>detail</th><th>tx / id</th></tr>
+<tr><td class='dim'>09-11 11:20:23</td><td style='color:#ff006a'>FLATTEN</td><td>side:YES</td><td><span class='dim'></span></td></tr>
+<tr><td class='dim'>09-11 11:20:18</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>3135946492530624…</span></td></tr>
+<tr><td class='dim'>09-11 11:20:02</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.227999</td><td><a href='https://shannon-explorer.somnia.network/tx/0x1441181c2bfee17bd023a5cac2c74f959050f124ea1693ffd03830a2eb25230a' target='_blank' title='0x1441181c2bfee17bd023a5cac2c74f959050f124ea1693ffd03830a2eb25230a'>0x1441181c2bfee1…</a></td></tr>
+<tr><td class='dim'>09-11 11:20:02</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:YES qty:5 px:0.762</td><td><a href='https://shannon-explorer.somnia.network/tx/0x302f33b2dae2b2620e4d05460150e7d112937ada824f425f9cd9f2da57520633' target='_blank' title='0x302f33b2dae2b2620e4d05460150e7d112937ada824f425f9cd9f2da57520633'>0x302f33b2dae2b2…</a></td></tr>
+<tr><td class='dim'>09-11 11:19:57</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>9223372036854787…</span></td></tr>
+<tr><td class='dim'>09-11 11:19:40</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.299999</td><td><a href='https://shannon-explorer.somnia.network/tx/0x22b85943c6ef6a3f486182bfcd4a98be2890e686994a361c27e97b3843c8c81f' target='_blank' title='0x22b85943c6ef6a3f486182bfcd4a98be2890e686994a361c27e97b3843c8c81f'>0x22b85943c6ef6a…</a></td></tr>
+<tr><td class='dim'>09-11 11:19:40</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:YES qty:5 px:0.69</td><td><a href='https://shannon-explorer.somnia.network/tx/0x8b63960e40a838bf970a663e64a9a0a4d14816c7a26497e665abd7f2286231ac' target='_blank' title='0x8b63960e40a838bf970a663e64a9a0a4d14816c7a26497e665abd7f2286231ac'>0x8b63960e40a838…</a></td></tr>
+<tr><td class='dim'>09-11 11:19:36</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>9223372036854787…</span></td></tr>
+<tr><td class='dim'>09-11 11:19:22</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.295</td><td><a href='https://shannon-explorer.somnia.network/tx/0xdf605e641041cffed7f5cf3f9813898ceb8c0368360050b7176666b852406926' target='_blank' title='0xdf605e641041cffed7f5cf3f9813898ceb8c0368360050b7176666b852406926'>0xdf605e641041cf…</a></td></tr>
+<tr><td class='dim'>09-11 11:19:18</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>9223372036854787…</span></td></tr>
+<tr><td class='dim'>09-11 11:19:02</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.256</td><td><a href='https://shannon-explorer.somnia.network/tx/0x6a010994616ba572f5d296bdfd39b0f6a89a21827a00df0d781326dee9e24629' target='_blank' title='0x6a010994616ba572f5d296bdfd39b0f6a89a21827a00df0d781326dee9e24629'>0x6a010994616ba5…</a></td></tr>
+<tr><td class='dim'>09-11 11:19:02</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:YES qty:5 px:0.734</td><td><a href='https://shannon-explorer.somnia.network/tx/0x2eaae5187bab66a5c2a2428ca74e5d0b842e55d1992788eeabad53fa15bf1bb2' target='_blank' title='0x2eaae5187bab66a5c2a2428ca74e5d0b842e55d1992788eeabad53fa15bf1bb2'>0x2eaae5187bab66…</a></td></tr>
+<tr><td class='dim'>09-11 11:18:58</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>5534023222112877…</span></td></tr>
+<tr><td class='dim'>09-11 11:18:44</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.254</td><td><a href='https://shannon-explorer.somnia.network/tx/0x7111f010cd30d111380dc6cf6aa671643fa8daa81c93f16136a9008376fccefa' target='_blank' title='0x7111f010cd30d111380dc6cf6aa671643fa8daa81c93f16136a9008376fccefa'>0x7111f010cd30d1…</a></td></tr>
+<tr><td class='dim'>09-11 11:18:39</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>5534023222112877…</span></td></tr>
+<tr><td class='dim'>09-11 11:18:24</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:YES qty:5 px:0.733499</td><td><a href='https://shannon-explorer.somnia.network/tx/0x9e1a24c572a5bce70ac377de85afcb5240863bf31a23ca7d07ec459ef566ebbc' target='_blank' title='0x9e1a24c572a5bce70ac377de85afcb5240863bf31a23ca7d07ec459ef566ebbc'>0x9e1a24c572a5bc…</a></td></tr>
+<tr><td class='dim'>09-11 11:18:18</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>5534023222112877…</span></td></tr>
+<tr><td class='dim'>09-11 11:18:04</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.339999</td><td><a href='https://shannon-explorer.somnia.network/tx/0xfaf7ade6cb9a82a85b949f77106f94dbf77841828c717ab78d75f93641caf388' target='_blank' title='0xfaf7ade6cb9a82a85b949f77106f94dbf77841828c717ab78d75f93641caf388'>0xfaf7ade6cb9a82…</a></td></tr>
+<tr><td class='dim'>09-11 11:18:04</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:YES qty:5 px:0.65</td><td><a href='https://shannon-explorer.somnia.network/tx/0xb9b22b18938b48e3a68aa66fd808bfe55466ef98d4ae0eb79bc7c9735d579699' target='_blank' title='0xb9b22b18938b48e3a68aa66fd808bfe55466ef98d4ae0eb79bc7c9735d579699'>0xb9b22b18938b48…</a></td></tr>
+<tr><td class='dim'>09-11 11:18:00</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>5534023222112877…</span></td></tr>
+<tr><td class='dim'>09-11 11:17:46</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:YES qty:5 px:0.5545</td><td><a href='https://shannon-explorer.somnia.network/tx/0xeae8fb5033d149616ec0b88a7561eb4aa679ee7377d0cea49eb2f39b61ea74c5' target='_blank' title='0xeae8fb5033d149616ec0b88a7561eb4aa679ee7377d0cea49eb2f39b61ea74c5'>0xeae8fb5033d149…</a></td></tr>
+<tr><td class='dim'>09-11 11:17:42</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>5534023222112877…</span></td></tr>
+<tr><td class='dim'>09-11 11:17:24</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.288</td><td><a href='https://shannon-explorer.somnia.network/tx/0xa745ce8a39e354cae36abcdf6205880360a92788ca504c6028f2d3bbcc4a1a9f' target='_blank' title='0xa745ce8a39e354cae36abcdf6205880360a92788ca504c6028f2d3bbcc4a1a9f'>0xa745ce8a39e354…</a></td></tr>
+<tr><td class='dim'>09-11 11:17:24</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:YES qty:5 px:0.702</td><td><a href='https://shannon-explorer.somnia.network/tx/0x6a3d9d4b5c755f610c32f2e313924bc727a38bfe3d5e179ceb85a4e05706bb4d' target='_blank' title='0x6a3d9d4b5c755f610c32f2e313924bc727a38bfe3d5e179ceb85a4e05706bb4d'>0x6a3d9d4b5c755f…</a></td></tr>
+<tr><td class='dim'>09-11 11:17:18</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>2398076729582242…</span></td></tr>
+<tr><td class='dim'>09-11 11:16:50</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.4745</td><td><a href='https://shannon-explorer.somnia.network/tx/0x83974dfb96559bd4cf98c7dc7a4bf996cf08e86cdc3f3fe15fc5c9f1fed31c04' target='_blank' title='0x83974dfb96559bd4cf98c7dc7a4bf996cf08e86cdc3f3fe15fc5c9f1fed31c04'>0x83974dfb96559b…</a></td></tr>
+<tr><td class='dim'>09-11 11:16:50</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:YES qty:5 px:0.515499</td><td><a href='https://shannon-explorer.somnia.network/tx/0xbaef60586b7c8cf76c0762bc9aa6bfe9de16695456cb7753245972e6dea1e2fb' target='_blank' title='0xbaef60586b7c8cf76c0762bc9aa6bfe9de16695456cb7753245972e6dea1e2fb'>0xbaef60586b7c8c…</a></td></tr>
+<tr><td class='dim'>09-11 11:16:45</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>2398076729582242…</span></td></tr>
+<tr><td class='dim'>09-11 11:16:31</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.5335</td><td><a href='https://shannon-explorer.somnia.network/tx/0x40df10a07e440fba086a2a74279d59c6e32db65cce586820f48311c0310be29f' target='_blank' title='0x40df10a07e440fba086a2a74279d59c6e32db65cce586820f48311c0310be29f'>0x40df10a07e440f…</a></td></tr>
+<tr><td class='dim'>09-11 11:16:31</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:YES qty:5 px:0.4565</td><td><a href='https://shannon-explorer.somnia.network/tx/0x51196e4f55b335ed311b0189ea0cf48e6192d08d879a8a20fd3c94776d81c90a' target='_blank' title='0x51196e4f55b335ed311b0189ea0cf48e6192d08d879a8a20fd3c94776d81c90a'>0x51196e4f55b335…</a></td></tr>
+<tr><td class='dim'>09-11 11:16:27</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>2398076729582242…</span></td></tr>
+<tr><td class='dim'>09-11 11:16:10</td><td style='color:#771be8'>REST</td><td>mkid:01a1ac kind:NO qty:5 px:0.4365</td><td><a href='https://shannon-explorer.somnia.network/tx/0x1f896e068e73655abb5879baba43daa116bdc5a5b559adcc550472de84db2a06' target='_blank' title='0x1f896e068e73655abb5879baba43daa116bdc5a5b559adcc550472de84db2a06'>0x1f896e068e7365…</a></td></tr>
+<tr><td class='dim'>09-11 11:15:17</td><td style='color:#ff7b00'>PEND</td><td>mkid:01a180</td><td><span class='dim'></span></td></tr>
+<tr><td class='dim'>09-11 11:06:25</td><td style='color:#ff006a'>FLATTEN</td><td>side:NO</td><td><span class='dim'></span></td></tr>
+<tr><td class='dim'>09-11 11:06:17</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>5902958103587057…</span></td></tr>
+<tr><td class='dim'>09-11 11:05:49</td><td style='color:#771be8'>REST</td><td>mkid:01a180 kind:NO qty:5 px:0.9555</td><td><a href='https://shannon-explorer.somnia.network/tx/0x83e0450f851482cfeaaaacabbb21fcb14bd606a5e9e27a7cad6c71f3aa54f813' target='_blank' title='0x83e0450f851482cfeaaaacabbb21fcb14bd606a5e9e27a7cad6c71f3aa54f813'>0x83e0450f851482…</a></td></tr>
+<tr><td class='dim'>09-11 11:05:49</td><td style='color:#771be8'>REST</td><td>mkid:01a180 kind:YES qty:5 px:0.034499</td><td><a href='https://shannon-explorer.somnia.network/tx/0x6cb10511ec09affc7a5cc8f25224633a00d007cfb416dca823a415a8ebfdcb16' target='_blank' title='0x6cb10511ec09affc7a5cc8f25224633a00d007cfb416dca823a415a8ebfdcb16'>0x6cb10511ec09af…</a></td></tr>
+<tr><td class='dim'>09-11 11:05:46</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>5902958103587057…</span></td></tr>
+<tr><td class='dim'>09-11 11:05:44</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>7378697629483821…</span></td></tr>
+<tr><td class='dim'>09-11 11:05:29</td><td style='color:#771be8'>REST</td><td>mkid:01a180 kind:NO qty:5 px:0.9575</td><td><a href='https://shannon-explorer.somnia.network/tx/0x552e7f63348df6be81d923153f7ef5812c569e3a77e4ff6aa8ecf115df5f7670' target='_blank' title='0x552e7f63348df6be81d923153f7ef5812c569e3a77e4ff6aa8ecf115df5f7670'>0x552e7f63348df6…</a></td></tr>
+</table></div>
+</div>
+<div>
+<h2>Paper shadow PnL — per-window settlement</h2>
+<div class="sub">identical policy objects, live book stream, 50-contract quotes</div>
+<div class="scroll"><table>
+<tr><th>window</th><th>asset</th><th style="text-align:right">settle PnL</th><th style="text-align:right">fills</th><th style="text-align:right">score share</th><th style="text-align:right">killed</th></tr>
+<tr><td class='dim'>019f7f</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>019f80</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>019f51</td><td>BTC</td><td style='color:#ff006a;text-align:right'>-17.75</td><td style='text-align:right'>1</td><td style='text-align:right'>33%</td><td style='text-align:right'>58%</td></tr>
+<tr><td class='dim'>019f52</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-125.45</td><td style='text-align:right'>10</td><td style='text-align:right'>49%</td><td style='text-align:right'>48%</td></tr>
+<tr><td class='dim'>019f62</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>28%</td><td style='text-align:right'>84%</td></tr>
+<tr><td class='dim'>019f61</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>92%</td></tr>
+<tr><td class='dim'>019f6f</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>84%</td></tr>
+<tr><td class='dim'>019f70</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>95%</td></tr>
+<tr><td class='dim'>019e9c</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-14.82</td><td style='text-align:right'>12</td><td style='text-align:right'>76%</td><td style='text-align:right'>25%</td></tr>
+<tr><td class='dim'>019e9b</td><td>BTC</td><td style='color:#ccff00;text-align:right'>+15.72</td><td style='text-align:right'>19</td><td style='text-align:right'>69%</td><td style='text-align:right'>28%</td></tr>
+<tr><td class='dim'>019f22</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>99%</td></tr>
+<tr><td class='dim'>019f21</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>92%</td></tr>
+<tr><td class='dim'>019f40</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>94%</td></tr>
+<tr><td class='dim'>019f3f</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>99%</td></tr>
+<tr><td class='dim'>019f54</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-19.00</td><td style='text-align:right'>1</td><td style='text-align:right'>59%</td><td style='text-align:right'>59%</td></tr>
+<tr><td class='dim'>019f53</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>44%</td><td style='text-align:right'>62%</td></tr>
+<tr><td class='dim'>019f32</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>96%</td></tr>
+<tr><td class='dim'>019f31</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>86%</td></tr>
+<tr><td class='dim'>019f24</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>94%</td></tr>
+<tr><td class='dim'>019f23</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>85%</td></tr>
+<tr><td class='dim'>019ef5</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>29%</td><td style='text-align:right'>24%</td></tr>
+<tr><td class='dim'>019ef6</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-25.30</td><td style='text-align:right'>1</td><td style='text-align:right'>65%</td><td style='text-align:right'>22%</td></tr>
+<tr><td class='dim'>019f13</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>100%</td></tr>
+<tr><td class='dim'>019f14</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>100%</td></tr>
+</table></div>
+</div>
+</div>
+</section>
+<section id="about">
+<div class="note">
+PROVENANCE — every figure regenerates from raw files: <span class="mono">publish.py</span> → <span class="mono">data/published/*.json</span> → this page.
+venue anatomy: 400 recorded markets, 18.5% never traded, median top-maker share 1.0 ·
+oracle-precision curve (1-min rail vs on-chain winner): <2bp: 5/14 · 2-5bp: 22/31 · 5-10bp: 21/33 · 10-25bp: 39/41 · >=25bp: 17/17 ·
+median settled distance from the line: 12.0 bp, 83.7% of windows finish within 25bp
+<br>PIN — quote geometry from the venue's own formula · kill rule from the venue's own settle history · claims from the chain. <a href="https://github.com/samixrd/pin-dreamdex">github.com/samixrd/pin-dreamdex</a>
+</div>
+</section>
+</div></body></html>
