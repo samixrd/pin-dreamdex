@@ -99,10 +99,19 @@ before every write.
 
 ## Run — fresh from a clone (analysis + local replay)
 
+The raw recording corpus (1.4 GB of order-book/fill tape) is gitignored; the committed
+`data/published/*.json` artifacts are what the claims cite, so **the judge path works on a
+bare clone**. To re-derive the analyses from source yourself, first generate or copy the tape:
+
 ```bash
 npm i
+# option A — record fresh (needs hours of collector on a live venue):
+npx tsx collector.ts &
+# option B — pull the VM's tape:  scp azureuser@<vm>:~/pin/data/\*.jsonl data/
+# option C — reconstruct history only (no books → sigma/hazard/sweep stay data-limited):
 python pxdeep.py                                 # 52-day price rail
 npx tsx backfill.ts 30                           # settled markets + maker fills
+
 python publish.py                                # compact JSON artifacts
 python sigma_est2.py && python hazard.py         # band estimate + kill calibration
 python sweep_final.py                            # policy frontier (replay)
@@ -162,7 +171,9 @@ dollars. Trade PnL on the frontier is replay; live PnL is the wallet delta (net-
   `secretscan.py` enforces it. The deployed monitor shows a truncated public address only.
 - Hard rails are compiled in, not env-tunable: 60 tUSDC/window, 200 cumulative, wallet balance
   floor (halt), mandatory `expireTimestampNs`, post-only, venue + on-chain-status gate.
-- `.env.example` documents every knob; copy to `.env` and edit. The repo never contains `.env`.
+- `.env.example` documents every knob (all read from the shell environment — no dotenv).
+  Copy to `.env` and load with `set -a; . ./.env; set +a`, or pass inline. The repo never
+  contains `.env`. RPC/indexer endpoints are compiled in, not env-tunable.
 
 ## Feedback report
 
