@@ -161,7 +161,6 @@ header {{ display:flex; justify-content:space-between; align-items:flex-end; bor
 .meta {{ text-align:right; font-size:10.5px; color:var(--dim) }}
 .grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:10px; margin:22px 0 }}
 .card {{ background:var(--surface); border:1px solid var(--border); padding:14px 16px 12px; position:relative; overflow:hidden }}
-.card::after {{ content:""; position:absolute; left:0; top:0; width:26px; height:2px; background:var(--purple) }}
 .card .v {{ font-family:'Space Grotesk',sans-serif; font-size:23px; font-weight:500; letter-spacing:.2px; font-variant-numeric:tabular-nums }}
 .card .v small {{ font-size:11px; color:var(--dim); font-weight:400 }}
 .card .l {{ color:var(--dim); font-size:10px; text-transform:uppercase; letter-spacing:1.4px; margin-top:2px }}
