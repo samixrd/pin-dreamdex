@@ -5,9 +5,10 @@
 **The venue pays makers to rest liquidity and never publishes the rulebook's key parameter.**
 dreamDEX distributes collateral yield to resting orders by
 `score = qty × exp(−(P−mid)²/2σ²) × seconds` (docs: Collateral Yield Algorithm). σ is set
-per market on-chain and is **not exposed by any API or SDK** — the official bot-kit requires
-operators to hand-set `YO_SIGMA_RAW`. 80 hackathon projects traded this venue; none mentions
-this mechanic. PIN is the first market maker whose objective function contains it.
+per market on-chain and is **not exposed by any API or SDK** — the official bot-kit itself
+gives up and requires operators to hand-set `YO_SIGMA_RAW`. We found no public strategy on
+this venue that models σ at all; PIN is the first market maker whose objective function
+contains it — inferred from recorded order books, not guessed.
 
 **Live monitor:** https://samixrd.github.io/pin-dreamdex/ — regenerated from the live VM stack every
 15 min (tx hashes link straight to the Shannon explorer; wallet cards read on-chain via `eth_call`)
