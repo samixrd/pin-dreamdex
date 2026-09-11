@@ -130,7 +130,7 @@ now = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
 explorer = "https://shannon-explorer.somnia.network/tx/"
 
 html = f"""<!DOCTYPE html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="60"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PIN — Yield-Aware Convergence MM · Somnia × dreamDEX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
