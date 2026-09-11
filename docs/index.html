@@ -66,15 +66,15 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
   </div>
   <div class="meta">
     <span class="livechip"><span class="pulse"></span> recording live</span><br>
-    0x2763…197a · venue 6797…a28c<br>2026-09-11 12:07 UTC
+    0x2763…197a · venue 6797…a28c<br>2026-09-11 12:08 UTC
   </div>
 </header>
 <nav><a href="#overview">Overview</a><a href="#edge">Edge</a><a href="#hazard">Hazard</a><a href="#ledger">Ledger</a><span class="nsep"></span><a href="#about">Provenance</a></nav>
 <section id="overview">
 <div class="grid">
-  <div class="card"><div class="v">93</div><div class="l">on-chain fills</div></div>
-  <div class="card"><div class="v">250.6 <small>tUSDC</small></div><div class="l">notional traded</div></div>
-  <div class="card"><div class="v">584</div><div class="l">orders rested</div></div>
+  <div class="card"><div class="v">94</div><div class="l">on-chain fills</div></div>
+  <div class="card"><div class="v">255.4 <small>tUSDC</small></div><div class="l">notional traded</div></div>
+  <div class="card"><div class="v">586</div><div class="l">orders rested</div></div>
   <div class="card"><div class="v">7</div><div class="l">claims + merges</div></div>
   <div class="card"><div class="v">74</div><div class="l">paper windows settled</div></div>
   <div class="card"><div class="v">6,264,341</div><div class="l">book snapshots</div></div>
@@ -84,12 +84,12 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 
 <h2>Live money — wallet read from chain at render time</h2>
 <div class="grid">
-  <div class="card"><div class="v">9,884.17 <small>tUSDC</small></div><div class="l">wallet balance now (eth_call)</div></div>
-  <div class="card"><div class="v">-115.83 <small>tUSDC</small></div><div class="l">net vs 10,000 faucet grant</div></div>
+  <div class="card"><div class="v">9,879.36 <small>tUSDC</small></div><div class="l">wallet balance now (eth_call)</div></div>
+  <div class="card"><div class="v">-120.64 <small>tUSDC</small></div><div class="l">net vs 10,000 faucet grant</div></div>
   <div class="card"><div class="v">0</div><div class="l">windows closed w/ settle bookend</div></div>
   <div class="card"><div class="v">7</div><div class="l">on-chain claims + merges</div></div>
 </div>
-<div class="sub">net-vs-grant is the only number that cannot be faked: money in = public faucet 10,000 tUSDC; money out = current ERC-20 balance of 0x2763…197a read via eth_call on the public Somnia RPC. Gas (STT) excluded; unsettled held positions ≈ 403 contracts not yet counted as collateral.</div>
+<div class="sub">net-vs-grant is the only number that cannot be faked: money in = public faucet 10,000 tUSDC; money out = current ERC-20 balance of 0x2763…197a read via eth_call on the public Somnia RPC. Gas (STT) excluded; unsettled held positions ≈ 408 contracts not yet counted as collateral.</div>
 </section>
 <section id="edge">
 <div class="cols">
@@ -129,7 +129,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <h2>Yield score race — replayed, not paid</h2>
 <div class="sub">what share of the venue's score race our quotes <em>would</em> have accrued: rivals' ladders are from real recorded books, the weight is dreamDEX's published formula, σ=0.01 is a stated assumption · no testnet payout is observable yet, so we report share not dollars</div>
 <div class='race'><span class='rname'>q200-1t-pk0.0</span><span class='rtrack'><span class='rfill' style='width:48.5%'></span></span><span class='rpct'>48.5%</span></div><div class='race'><span class='rname'>q200-5t-pk0.0</span><span class='rtrack'><span class='rfill' style='width:45.5%'></span></span><span class='rpct'>45.5%</span></div><div class='race'><span class='rname'>q200-1t-pk0.6</span><span class='rtrack'><span class='rfill' style='width:44.8%'></span></span><span class='rpct'>44.8%</span></div><div class='race'><span class='rname'>q200-5t-pk0.6</span><span class='rtrack'><span class='rfill' style='width:41.8%'></span></span><span class='rpct'>41.8%</span></div><div class='race'><span class='rname'>q200-2c-pk0.0</span><span class='rtrack'><span class='rfill' style='width:14.1%'></span></span><span class='rpct'>14.1%</span></div><div class='race'><span class='rname'>q200-2c-pk0.6</span><span class='rtrack'><span class='rfill' style='width:13.1%'></span></span><span class='rpct'>13.1%</span></div><div class='race'><span class='rname'>q200-1t-pk0.35</span><span class='rtrack'><span class='rfill' style='width:3.8%'></span></span><span class='rpct'>3.8%</span></div><div class='race'><span class='rname'>q200-5t-pk0.35</span><span class='rtrack'><span class='rfill' style='width:3.4%'></span></span><span class='rpct'>3.4%</span></div>
-<div class="sub" style="margin-top:10px">the incumbent ladder's own config implies σ ∈ [0.005, 0.0225] — we bracket an unpublished venue parameter from public data (<span class="mono">sigma_est.py</span>)</div>
+<div class="sub" style="margin-top:10px">ML over 1.88M recorded snapshots: incumbent ladders rest 1.3¢ median / 1.5¢ p95 ⇒ band-implied <b>σ ≈ 0.013–0.015</b> (<span class="mono">sigma_est2.py</span>) — an unpublished venue parameter, estimated from public data</div>
 </div>
 </div>
 </section>
@@ -146,6 +146,10 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <div class="sub">https://shannon-explorer.somnia.network/tx/…</div>
 <div class="scroll"><table>
 <tr><th>time</th><th>event</th><th>detail</th><th>tx / id</th></tr>
+<tr><td class='dim'>09-11 12:08:25</td><td style='color:#771be8'>REST</td><td>mkid:01a235 kind:NO qty:5 px:0.958</td><td><a href='https://shannon-explorer.somnia.network/tx/0x367e597fc6f54a3980fb48902646e120ae166b6d906529f0d1368dc706e2781e' target='_blank' title='0x367e597fc6f54a3980fb48902646e120ae166b6d906529f0d1368dc706e2781e'>0x367e597fc6f54a…</a></td></tr>
+<tr><td class='dim'>09-11 12:08:25</td><td style='color:#771be8'>REST</td><td>mkid:01a235 kind:YES qty:5 px:0.032</td><td><a href='https://shannon-explorer.somnia.network/tx/0xed1c6f005ee4d62a8aff60394a71bbe6048f7a041e3af47ed54e04857056b2ae' target='_blank' title='0xed1c6f005ee4d62a8aff60394a71bbe6048f7a041e3af47ed54e04857056b2ae'>0xed1c6f005ee4d6…</a></td></tr>
+<tr><td class='dim'>09-11 12:08:20</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>4242751136953197…</span></td></tr>
+<tr><td class='dim'>09-11 12:07:52</td><td style='color:#ccff00'>FILL</td><td>mkid:01a235 kind:NO qty:5 px:0.9615</td><td><span class='dim'></span></td></tr>
 <tr><td class='dim'>09-11 12:07:24</td><td style='color:#771be8'>REST</td><td>mkid:01a235 kind:NO qty:5 px:0.9615</td><td><a href='https://shannon-explorer.somnia.network/tx/0x904c15dd33eb0f0b60b4e1312dbe82059caac86ef2251edfdd410ed3350db507' target='_blank' title='0x904c15dd33eb0f0b60b4e1312dbe82059caac86ef2251edfdd410ed3350db507'>0x904c15dd33eb0f…</a></td></tr>
 <tr><td class='dim'>09-11 12:07:24</td><td style='color:#771be8'>REST</td><td>mkid:01a235 kind:YES qty:5 px:0.0285</td><td><a href='https://shannon-explorer.somnia.network/tx/0xc1b0544f73b8f96e61c490b3508187d5050f056f28a303c6446284daa526eac8' target='_blank' title='0xc1b0544f73b8f96e61c490b3508187d5050f056f28a303c6446284daa526eac8'>0xc1b0544f73b8f9…</a></td></tr>
 <tr><td class='dim'>09-11 12:07:20</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>4242751136953197…</span></td></tr>
@@ -182,10 +186,6 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <tr><td class='dim'>09-11 11:55:40</td><td style='color:#771be8'>REST</td><td>mkid:01a204 kind:YES qty:5 px:0.869</td><td><a href='https://shannon-explorer.somnia.network/tx/0x697a3d83a8082e50eac5732beb5b52af4209ccf0ab9663c208de723691dc6e36' target='_blank' title='0x697a3d83a8082e50eac5732beb5b52af4209ccf0ab9663c208de723691dc6e36'>0x697a3d83a8082e…</a></td></tr>
 <tr><td class='dim'>09-11 11:55:18</td><td style='color:#771be8'>REST</td><td>mkid:01a204 kind:NO qty:5 px:0.069999</td><td><a href='https://shannon-explorer.somnia.network/tx/0x5412f4eebb84b35d13beb874e26cde9ae41f03c8cb2b643cc320d8a1bf061c59' target='_blank' title='0x5412f4eebb84b35d13beb874e26cde9ae41f03c8cb2b643cc320d8a1bf061c59'>0x5412f4eebb84b3…</a></td></tr>
 <tr><td class='dim'>09-11 11:55:18</td><td style='color:#771be8'>REST</td><td>mkid:01a204 kind:YES qty:5 px:0.92</td><td><a href='https://shannon-explorer.somnia.network/tx/0x564a772ad736a937edd55ad9f9205493b8423b1b01fddf8f734e3ddc47e9191a' target='_blank' title='0x564a772ad736a937edd55ad9f9205493b8423b1b01fddf8f734e3ddc47e9191a'>0x564a772ad736a9…</a></td></tr>
-<tr><td class='dim'>09-11 11:55:14</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>7378697629483821…</span></td></tr>
-<tr><td class='dim'>09-11 11:55:13</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>8485502273906394…</span></td></tr>
-<tr><td class='dim'>09-11 11:54:59</td><td style='color:#771be8'>REST</td><td>mkid:01a204 kind:NO qty:5 px:0.072499</td><td><a href='https://shannon-explorer.somnia.network/tx/0xe68673ee5ca782e06c0666def9e6d89ebe2491e34e19665f377465d10964055b' target='_blank' title='0xe68673ee5ca782e06c0666def9e6d89ebe2491e34e19665f377465d10964055b'>0xe68673ee5ca782…</a></td></tr>
-<tr><td class='dim'>09-11 11:54:59</td><td style='color:#771be8'>REST</td><td>mkid:01a204 kind:YES qty:5 px:0.9175</td><td><a href='https://shannon-explorer.somnia.network/tx/0x16471b83f30eec24b43144931197d9b98b5bb4c3bdfc9826c96d745e666206c4' target='_blank' title='0x16471b83f30eec24b43144931197d9b98b5bb4c3bdfc9826c96d745e666206c4'>0x16471b83f30eec…</a></td></tr>
 </table></div>
 </div>
 <div>

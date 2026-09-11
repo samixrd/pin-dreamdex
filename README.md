@@ -24,7 +24,7 @@ on Somnia) that:
    the Gaussian weight band, not a fixed spread. Measured on recorded books: at the incumbent
    ladder's quote size, touch-adjacent quoting captures **22–88% of the book's total yield
    score** (band-dependent) vs **0.1–19%** for the standard ±2¢ maker — a 300× gap at narrow σ,
-   still 1.5×+ and $-positive at the band the incumbents' own geometry implies.
+   still 1.5×+ and $-positive at the band the incumbents' own geometry implies (σ ≈ 0.014, ML over 1.88M snapshots).
 2. **Carries a kill rule calibrated on the venue's settle distribution, not textbook BM.**
    From 52 days / 146k-candle rail over 100+ validated windows: **67% of windows finish
    within 1σ of their opening line** — pin risk is the modal outcome. The guard fires on
@@ -43,7 +43,7 @@ on Somnia) that:
 | Median traded market has **one maker taking 100% of maker volume**; 49% of fills are mint-a-pair (no sellers exist) | per-market fill ladders w/ maker addresses |
 | Oracle resolves outcomes that public 1-min feeds **cannot reproduce**: 100% agreement ≥25bp from the line, 64% at 5–10bp, 36% <2bp | `analyze3.py`, 136-window test |
 | Adverse selection has **3 regimes**: touch pays −1.5¢ markout, 1–2¢ band *earns* +1.8¢ (trend flow), ≥3¢ turns toxic (33–47% loss tails) | 2,170 reconstructed maker fills |
-| σ bracketed from public data: incumbent ladder at 1–2.25¢ ⇒ σ ∈ [0.005, 0.0225] under the ops e^−½ convention — the estimator is our own | `sigma_est.py` |
+| σ — the venue's unpublished band — estimated from 1.88M book snapshots: incumbent ladders rest 1.3¢ median / 1.5¢ p95 off mid ⇒ **σ ≈ 0.013–0.015** (max-likelihood floor inversion; v1 range [0.005, 0.0225] tightened) | `sigma_est2.py`, `data/published/sigma_est_v2.json` |
 | Policy frontier (q200): **touch + hazard-kill(0.6) = +136.7 mean, worst window 0.0, 81.5% yield share** (σ=0.005) vs naive-2¢ **+46.8, worst −56.4, 0.2%** | `sweep_final.py`, `data/published/sweep_final.json` |
 | Empirical pin hazard: P(settle ≤10bp from line) = 47–59% right after open, dropping to 3% once 2bp√min of escape — the kill rule is *calibrated on this table*, not on textbook BM | `data/published/hazard_table.json` |
 | Live money: 339 ledger events — orders placed, filled (incl. NO at 0.012 during a crash-through), flattened, merged, redeemed, all with tx hashes on Shannon | `data/published/live_ledger.json` |

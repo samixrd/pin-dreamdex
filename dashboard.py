@@ -260,7 +260,7 @@ a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }
 <h2>Yield score race — replayed, not paid</h2>
 <div class="sub">what share of the venue's score race our quotes <em>would</em> have accrued: rivals' ladders are from real recorded books, the weight is dreamDEX's published formula, σ=0.01 is a stated assumption · no testnet payout is observable yet, so we report share not dollars</div>
 {race_html}
-<div class="sub" style="margin-top:10px">the incumbent ladder's own config implies σ ∈ [0.005, 0.0225] — we bracket an unpublished venue parameter from public data (<span class="mono">sigma_est.py</span>)</div>
+<div class="sub" style="margin-top:10px">ML over 1.88M recorded snapshots: incumbent ladders rest 1.3¢ median / 1.5¢ p95 ⇒ band-implied <b>σ ≈ 0.013–0.015</b> (<span class="mono">sigma_est2.py</span>) — an unpublished venue parameter, estimated from public data</div>
 </div>
 </div>
 </section>
