@@ -27,7 +27,28 @@ anatomy = pj("venue_anatomy.json")
 oracle = pj("oracle_precision.json")
 SD = pj("settle_distances.json")
 
+# ---- live chain facts for the money summary ----
+import subprocess
+RPC = "https://api.infra.testnet.somnia.network"
+PIN = "0x27633fEC5EdA3F0298BfFa24018dAf54dd18197A"
+TUSDC = "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E"
+def rpc(method, params):
+    try:
+        body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
+        r = subprocess.run(["curl", "-s", "-m", "15", RPC, "-H", "Content-Type: application/json", "-d", body],
+                           capture_output=True, text=True)
+        return json.loads(r.stdout).get("result")
+    except Exception:
+        return None
+CHAIN_TUSDC = None
+_res = rpc("eth_call", [{"to": TUSDC, "data": "0x70a08231000000000000000000000000" + PIN[2:].lower()}, "latest"])
+if _res: CHAIN_TUSDC = int(_res, 16) / 1e6
+GRANT = 10_000.0   # self-serve faucet, one call
+
 fills = [e for e in live if e["ev"] == "fill"]
+ws = [e for e in live if e["ev"] == "window_settle"]
+redeemed_amt = sum(e.get("amt", 0) or 0 for e in live if e["ev"] in ("redeem", "claim_sweep"))
+held_contracts = max(0.0, sum(e["qty"] for e in fills) - redeemed_amt)
 rests = [e for e in live if e["ev"] == "rest"]
 redeems = [e for e in live if e["ev"] in ("redeem", "claim_sweep")]
 merges = [e for e in live if e["ev"] == "merge"]
@@ -218,6 +239,15 @@ a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }
   <div class="card"><div class="v">{anatomy.get('five_min_dead_pct','—')}<small>%</small></div><div class="l">5-min windows dead</div></div>
   <div class="card"><div class="v">{anatomy.get('median_mint_pair_share',0)*100:.0f}<small>%</small></div><div class="l">fills are mint-a-pair</div></div>
 </div>
+
+<h2>Live money — wallet read from chain at render time</h2>
+<div class="grid">
+  <div class="card"><div class="v">{f'{CHAIN_TUSDC:,.2f}' if CHAIN_TUSDC is not None else '—'} <small>tUSDC</small></div><div class="l">wallet balance now (eth_call)</div></div>
+  <div class="card"><div class="v">{(f'{CHAIN_TUSDC - GRANT:+,.2f}' if CHAIN_TUSDC is not None else '—')} <small>tUSDC</small></div><div class="l">net vs 10,000 faucet grant</div></div>
+  <div class="card"><div class="v">{len(ws)}</div><div class="l">windows closed w/ settle bookend</div></div>
+  <div class="card"><div class="v">{sum(1 for e in live if e["ev"]=="redeem") + len(merges)}</div><div class="l">on-chain claims + merges</div></div>
+</div>
+<div class="sub">net-vs-grant is the only number that cannot be faked: money in = public faucet 10,000 tUSDC; money out = current ERC-20 balance of 0x2763…197a read via eth_call on the public Somnia RPC. Gas (STT) excluded; unsettled held positions ≈ {held_contracts:.0f} contracts not yet counted as collateral.</div>
 </section>
 <section id="edge">
 <div class="cols">

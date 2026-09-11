@@ -163,6 +163,15 @@ async function runOneWindow() {
   const base = sym.replace(/#YES$/, "");
   log(`selected ${asset} …${String(mkid).slice(-6)} mid=${mid.toFixed(3)} left=${((expiry - Date.now() / 1000) / 60) | 0}m expiryNs ok`);
 
+  // window-start collateral snapshot for balance-delta settle PnL (tUSDC raw 6-dp)
+  const TUSDC = "0x70a86D8842FB63C4Ad2b7cdddF530eBf1BB25d8E";
+  async function tusdc(): Promise<number | null> {
+    const bal: any = await withTimeout(ex.fetchBalance(), 15000);
+    const v = bal?.tUSDC?.total ?? bal?.["0x70a86d8842fb63c4ad2b7cdddf530ebf1bb25d8e"]?.total;
+    return v == null ? null : Number(v);
+  }
+  const b0 = DRY ? 0 : await tusdc();
+
   // line-to-beat from the deep rail (window open price). Fallback: window is young
   // (<6min left of a <=5min series, i.e. just opened) -> current spot IS ~the open.
   let line = await sortedOpen(asset, start * 1000);
@@ -176,6 +185,7 @@ async function runOneWindow() {
 
   let resting: { id: string; sym: string; kind: "YES" | "NO"; px: number; since: number }[] = [];
   let spent = 0, fills = 0, killOn = false, cycles = 0, lastMid = mid;
+  let holdY = 0, holdN = 0, costY = 0, costN = 0;   // per-window position book for settle PnL
 
   while (Date.now() / 1000 < expiry - FLATTEN_S) {
     cycles++;
@@ -233,6 +243,7 @@ async function runOneWindow() {
       for (const r of resting.filter((x) => !openIds.has(x.id) && Date.now() - x.since > 25_000)) {
         fills++; log(`FILL detected: ${r.kind} ${QUOTE_Q}@${r.px.toFixed(3)} (settles at 0/1)`);
         write({ ev: "fill", mkid: String(mkid).slice(-6), kind: r.kind, qty: QUOTE_Q, px: r.px });
+        if (r.kind === "YES") { holdY += QUOTE_Q; costY += QUOTE_Q * r.px; } else { holdN += QUOTE_Q; costN += QUOTE_Q * r.px; }
       }
       resting = resting.filter((x) => openIds.has(x.id) || Date.now() - x.since <= 25_000);
     }
@@ -279,6 +290,16 @@ async function runOneWindow() {
   }
   if (!redeemed && lastErr) write({ ev: "redeem_pending", mkid: String(mkid).slice(-6), err: lastErr });
   const balF: any = DRY ? null : await withTimeout(ex.fetchBalance(), 15000);
+  // balance-delta settle PnL: what this window actually cost/earned in collateral
+  let pnl: number | null = null;
+  if (!DRY && b0 != null) {
+    const b1 = await tusdc();
+    if (b1 != null) pnl = (b1 - b0) / 1e6;
+  }
+  write({ ev: "window_settle", mkid: String(mkid).slice(-6), asset, fills, holdY, holdN,
+          cost: +(costY + costN).toFixed(3), pnl_balance_delta: pnl,
+          note: "pnl = wallet tUSDC delta over window (includes escrow timing; claims land via sweep)" });
+  log(`SETTLE …${String(mkid).slice(-6)} fills=${fills} pos Y${holdY}/N${holdN} cost=${(costY + costN).toFixed(2)} Δbalance=${pnl == null ? "n/a" : pnl.toFixed(2)}`);
   log(`DONE | cycles=${cycles} fills=${fills} spent≈${spent.toFixed(2)} final tUSDC=${balF?.tUSDC?.free ?? balF?.["0x70a86d8842fb63c4ad2b7cdddf530ebf1bb25d8e"]?.free ?? "?"}`);
   return spent;
 }
