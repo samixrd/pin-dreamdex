@@ -66,7 +66,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
   </div>
   <div class="meta">
     <span class="livechip"><span class="pulse"></span> recording live</span><br>
-    0x2763…197a · venue 6797…a28c<br>2026-09-11 18:45 UTC
+    0x2763…197a · venue 6797…a28c<br>2026-09-11 19:00 UTC
   </div>
 </header>
 <nav><a href="#overview">Overview</a><a href="#edge">Edge</a><a href="#hazard">Hazard</a><a href="#ledger">Ledger</a><span class="nsep"></span><a href="#about">Provenance</a></nav>
@@ -74,8 +74,8 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <div class="grid">
   <div class="card"><div class="v">110</div><div class="l">on-chain fills</div></div>
   <div class="card"><div class="v">295.8 <small>tUSDC</small></div><div class="l">notional traded</div></div>
-  <div class="card"><div class="v">1137</div><div class="l">orders rested</div></div>
-  <div class="card"><div class="v">20</div><div class="l">claims + merges</div></div>
+  <div class="card"><div class="v">1154</div><div class="l">orders rested</div></div>
+  <div class="card"><div class="v">21</div><div class="l">claims + merges</div></div>
   <div class="card"><div class="v">138</div><div class="l">paper windows settled</div></div>
   <div class="card"><div class="v">6,264,341</div><div class="l">book snapshots</div></div>
   <div class="card"><div class="v">20.9<small>%</small></div><div class="l">5-min windows dead</div></div>
@@ -84,12 +84,12 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 
 <h2>Live money — wallet read from chain at render time</h2>
 <div class="grid">
-  <div class="card"><div class="v">9,818.46 <small>tUSDC</small></div><div class="l">wallet balance now (eth_call)</div></div>
-  <div class="card"><div class="v">-181.54 <small>tUSDC</small></div><div class="l">net vs 10,000 faucet grant</div></div>
-  <div class="card"><div class="v">27</div><div class="l">windows closed w/ settle bookend</div></div>
-  <div class="card"><div class="v">20</div><div class="l">on-chain claims + merges</div></div>
+  <div class="card"><div class="v">9,807.27 <small>tUSDC</small></div><div class="l">wallet balance now (eth_call)</div></div>
+  <div class="card"><div class="v">-192.73 <small>tUSDC</small></div><div class="l">net vs 10,000 faucet grant</div></div>
+  <div class="card"><div class="v">28</div><div class="l">windows closed w/ settle bookend</div></div>
+  <div class="card"><div class="v">21</div><div class="l">on-chain claims + merges</div></div>
 </div>
-<div class="sub">net-vs-grant is the only number that cannot be faked: money in = public faucet 10,000 tUSDC; money out = current ERC-20 balance of 0x2763…197a read via eth_call on the public Somnia RPC. Gas (STT) excluded; unsettled held positions ≈ 388 contracts not yet counted as collateral.</div>
+<div class="sub">net-vs-grant is the only number that cannot be faked: money in = public faucet 10,000 tUSDC; money out = current ERC-20 balance of 0x2763…197a read via eth_call on the public Somnia RPC. Gas (STT) excluded; unsettled held positions ≈ 378 contracts not yet counted as collateral.</div>
 </section>
 <section id="edge">
 <div class="cols">
@@ -146,6 +146,36 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <div class="sub">https://shannon-explorer.somnia.network/tx/…</div>
 <div class="scroll"><table>
 <tr><th>time</th><th>event</th><th>detail</th><th>tx / id</th></tr>
+<tr><td class='dim'>09-11 18:50:13</td><td style='color:#ff006a'>FLATTEN</td><td>side:NO</td><td><span class='dim'></span></td></tr>
+<tr><td class='dim'>09-11 18:50:07</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>4242751136953198…</span></td></tr>
+<tr><td class='dim'>09-11 18:49:53</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:NO qty:5 px:0.334999</td><td><a href='https://shannon-explorer.somnia.network/tx/0x18d8950d5e3cc39c0817825b328265b22d24ee089ceee09a3bf7a2de172ed82b' target='_blank' title='0x18d8950d5e3cc39c0817825b328265b22d24ee089ceee09a3bf7a2de172ed82b'>0x18d8950d5e3cc3…</a></td></tr>
+<tr><td class='dim'>09-11 18:49:34</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:NO qty:5 px:0.5285</td><td><a href='https://shannon-explorer.somnia.network/tx/0x13ba6d600e4d745b29b8ebc71109f5ecd8f0a04c49b1ae90c314bfd7b2b53e9e' target='_blank' title='0x13ba6d600e4d745b29b8ebc71109f5ecd8f0a04c49b1ae90c314bfd7b2b53e9e'>0x13ba6d600e4d74…</a></td></tr>
+<tr><td class='dim'>09-11 18:49:13</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:YES qty:5 px:0.4365</td><td><a href='https://shannon-explorer.somnia.network/tx/0x3410a259e386461e33c452bfd7927cf37eedffd7edbd0778c713b55b436710de' target='_blank' title='0x3410a259e386461e33c452bfd7927cf37eedffd7edbd0778c713b55b436710de'>0x3410a259e38646…</a></td></tr>
+<tr><td class='dim'>09-11 18:49:08</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>3873816255479007…</span></td></tr>
+<tr><td class='dim'>09-11 18:48:53</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:NO qty:5 px:0.453499</td><td><a href='https://shannon-explorer.somnia.network/tx/0x8ae187f403f48532b5cab7d72703bd3650229e396ec1544c9caaec31bba8e9e6' target='_blank' title='0x8ae187f403f48532b5cab7d72703bd3650229e396ec1544c9caaec31bba8e9e6'>0x8ae187f403f485…</a></td></tr>
+<tr><td class='dim'>09-11 18:48:33</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>3873816255479007…</span></td></tr>
+<tr><td class='dim'>09-11 18:48:14</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:NO qty:5 px:0.568</td><td><a href='https://shannon-explorer.somnia.network/tx/0xd87f2ad0f58c8c8f2a10f6c4c1396a56f227a41a7ce39943b834355c2c2317df' target='_blank' title='0xd87f2ad0f58c8c8f2a10f6c4c1396a56f227a41a7ce39943b834355c2c2317df'>0xd87f2ad0f58c8c…</a></td></tr>
+<tr><td class='dim'>09-11 18:48:14</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:YES qty:5 px:0.422</td><td><a href='https://shannon-explorer.somnia.network/tx/0x30140ce821dd2d28dbb6a9e0b9c9699eb0b5e4441724e7667ff27b4ae8037d4a' target='_blank' title='0x30140ce821dd2d28dbb6a9e0b9c9699eb0b5e4441724e7667ff27b4ae8037d4a'>0x30140ce821dd2d…</a></td></tr>
+<tr><td class='dim'>09-11 18:48:11</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>4242751136953198…</span></td></tr>
+<tr><td class='dim'>09-11 18:47:55</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:YES qty:5 px:0.4185</td><td><a href='https://shannon-explorer.somnia.network/tx/0x5cdcab97568cf9c1009dc96bd2b1b169b6c9e6ae96bbcb9de9d98edd8c3220f6' target='_blank' title='0x5cdcab97568cf9c1009dc96bd2b1b169b6c9e6ae96bbcb9de9d98edd8c3220f6'>0x5cdcab97568cf9…</a></td></tr>
+<tr><td class='dim'>09-11 18:47:51</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>4242751136953198…</span></td></tr>
+<tr><td class='dim'>09-11 18:47:36</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:NO qty:5 px:0.42</td><td><a href='https://shannon-explorer.somnia.network/tx/0x52690db8d440b5f9c9387a55cbb2d1fd15effab1859906d0dac941d029af2d87' target='_blank' title='0x52690db8d440b5f9c9387a55cbb2d1fd15effab1859906d0dac941d029af2d87'>0x52690db8d440b5…</a></td></tr>
+<tr><td class='dim'>09-11 18:47:36</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:YES qty:5 px:0.57</td><td><a href='https://shannon-explorer.somnia.network/tx/0xd9882ef50fe8ca48efbac6c8e3fe7449b9412c18c95ded71b78f9c1b2fec4993' target='_blank' title='0xd9882ef50fe8ca48efbac6c8e3fe7449b9412c18c95ded71b78f9c1b2fec4993'>0xd9882ef50fe8ca…</a></td></tr>
+<tr><td class='dim'>09-11 18:47:30</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>3135946492530625…</span></td></tr>
+<tr><td class='dim'>09-11 18:47:14</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:NO qty:5 px:0.418</td><td><a href='https://shannon-explorer.somnia.network/tx/0x3b4a6a002922ed99d575e3517267f803325628dff4bf37df2130b0416a336ff5' target='_blank' title='0x3b4a6a002922ed99d575e3517267f803325628dff4bf37df2130b0416a336ff5'>0x3b4a6a002922ed…</a></td></tr>
+<tr><td class='dim'>09-11 18:47:14</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:YES qty:5 px:0.572</td><td><a href='https://shannon-explorer.somnia.network/tx/0x9bc3c7efb7e4db2ba010b669afa361e6c850c0d29beb1709b69b554c4f06c0ee' target='_blank' title='0x9bc3c7efb7e4db2ba010b669afa361e6c850c0d29beb1709b69b554c4f06c0ee'>0x9bc3c7efb7e4db…</a></td></tr>
+<tr><td class='dim'>09-11 18:47:10</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>3135946492530625…</span></td></tr>
+<tr><td class='dim'>09-11 18:46:53</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:NO qty:5 px:0.382</td><td><a href='https://shannon-explorer.somnia.network/tx/0x58ab6ebe3faf5bfb6eaa3cf5b9cd8e6101fa2d1163812e799466c5018f30d3f4' target='_blank' title='0x58ab6ebe3faf5bfb6eaa3cf5b9cd8e6101fa2d1163812e799466c5018f30d3f4'>0x58ab6ebe3faf5b…</a></td></tr>
+<tr><td class='dim'>09-11 18:46:53</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:YES qty:5 px:0.608</td><td><a href='https://shannon-explorer.somnia.network/tx/0x709dd614d7ef091cde0c90b6d6aa3323b36a255ff06114d22e4f50c38f470449' target='_blank' title='0x709dd614d7ef091cde0c90b6d6aa3323b36a255ff06114d22e4f50c38f470449'>0x709dd614d7ef09…</a></td></tr>
+<tr><td class='dim'>09-11 18:46:49</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>3873816255479007…</span></td></tr>
+<tr><td class='dim'>09-11 18:46:33</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:NO qty:5 px:0.386499</td><td><a href='https://shannon-explorer.somnia.network/tx/0xbf8b9de1eca3e9de01f755920ee4b8c679b826f15ce3987db1a532fa57fd0f11' target='_blank' title='0xbf8b9de1eca3e9de01f755920ee4b8c679b826f15ce3987db1a532fa57fd0f11'>0xbf8b9de1eca3e9…</a></td></tr>
+<tr><td class='dim'>09-11 18:46:33</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:YES qty:5 px:0.6035</td><td><a href='https://shannon-explorer.somnia.network/tx/0x6a1e498562064cf87e48913d07ab884b93fbfac5e6c738ece1c2616b80e950ee' target='_blank' title='0x6a1e498562064cf87e48913d07ab884b93fbfac5e6c738ece1c2616b80e950ee'>0x6a1e498562064c…</a></td></tr>
+<tr><td class='dim'>09-11 18:46:29</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>2398076729582243…</span></td></tr>
+<tr><td class='dim'>09-11 18:46:12</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:NO qty:5 px:0.336999</td><td><a href='https://shannon-explorer.somnia.network/tx/0xd37b9624312d84e2fccc0935ed69b4a41b0c7594452fd73e5e45750804558ca5' target='_blank' title='0xd37b9624312d84e2fccc0935ed69b4a41b0c7594452fd73e5e45750804558ca5'>0xd37b9624312d84…</a></td></tr>
+<tr><td class='dim'>09-11 18:46:12</td><td style='color:#771be8'>REST</td><td>mkid:01a721 kind:YES qty:5 px:0.653</td><td><a href='https://shannon-explorer.somnia.network/tx/0x727037ce565e551ed3883cc7deaac6cdb13dff3826439dd38af1c479bb30399e' target='_blank' title='0x727037ce565e551ed3883cc7deaac6cdb13dff3826439dd38af1c479bb30399e'>0x727037ce565e55…</a></td></tr>
+<tr><td class='dim'>09-11 18:45:27</td><td style='color:#61ea7d'>CLAIM</td><td>amt:10</td><td><a href='https://shannon-explorer.somnia.network/tx/0x775ca5997a0f76580666f3ed6a2bd399e3e9aec08df0a4d9c0ca9a08ce304de5' target='_blank' title='0x775ca5997a0f76580666f3ed6a2bd399e3e9aec08df0a4d9c0ca9a08ce304de5'>0x775ca5997a0f76…</a></td></tr>
+<tr><td class='dim'>09-11 18:45:18</td><td style='color:#888'>WINDOW_SETTLE</td><td>mkid:01a6f5</td><td><span class='dim'></span></td></tr>
+<tr><td class='dim'>09-11 18:45:17</td><td style='color:#ff7b00'>PEND</td><td>mkid:01a6f5</td><td><span class='dim'></span></td></tr>
 <tr><td class='dim'>09-11 18:35:12</td><td style='color:#ff006a'>FLATTEN</td><td>side:NO</td><td><span class='dim'></span></td></tr>
 <tr><td class='dim'>09-11 18:35:05</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>4242751136953197…</span></td></tr>
 <tr><td class='dim'>09-11 18:34:48</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:NO qty:5 px:0.363</td><td><a href='https://shannon-explorer.somnia.network/tx/0x35e032636fab3285020e1d4376c6704808cf0070b5d10e7bfe6e8d5715193618' target='_blank' title='0x35e032636fab3285020e1d4376c6704808cf0070b5d10e7bfe6e8d5715193618'>0x35e032636fab32…</a></td></tr>
@@ -156,36 +186,6 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <tr><td class='dim'>09-11 18:34:11</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:YES qty:5 px:0.450999</td><td><a href='https://shannon-explorer.somnia.network/tx/0xf6a68e509174c0e84664c37d5d4febde899e20064d2f88e3ff5198ef955af5b5' target='_blank' title='0xf6a68e509174c0e84664c37d5d4febde899e20064d2f88e3ff5198ef955af5b5'>0xf6a68e509174c0…</a></td></tr>
 <tr><td class='dim'>09-11 18:34:08</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>4242751136953197…</span></td></tr>
 <tr><td class='dim'>09-11 18:33:53</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:NO qty:5 px:0.501</td><td><a href='https://shannon-explorer.somnia.network/tx/0x6afa44485c3f1bbbd176559b3d7ecd6c4c18b0263f2f27cb1575e9dbe680ff15' target='_blank' title='0x6afa44485c3f1bbbd176559b3d7ecd6c4c18b0263f2f27cb1575e9dbe680ff15'>0x6afa44485c3f1b…</a></td></tr>
-<tr><td class='dim'>09-11 18:33:48</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>4242751136953197…</span></td></tr>
-<tr><td class='dim'>09-11 18:33:34</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:NO qty:5 px:0.5475</td><td><a href='https://shannon-explorer.somnia.network/tx/0x9ec7d2aed90b2c9bf00b5393cb7b4ae4fee30f0db3456e0195c123bfe3e60d9a' target='_blank' title='0x9ec7d2aed90b2c9bf00b5393cb7b4ae4fee30f0db3456e0195c123bfe3e60d9a'>0x9ec7d2aed90b2c…</a></td></tr>
-<tr><td class='dim'>09-11 18:33:34</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:YES qty:5 px:0.4425</td><td><a href='https://shannon-explorer.somnia.network/tx/0xafa564d04c56912d9bf8f5e76088f0a072e1838c7bf331b010ffff7d4a213964' target='_blank' title='0xafa564d04c56912d9bf8f5e76088f0a072e1838c7bf331b010ffff7d4a213964'>0xafa564d04c5691…</a></td></tr>
-<tr><td class='dim'>09-11 18:33:03</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:NO qty:5 px:0.6115</td><td><a href='https://shannon-explorer.somnia.network/tx/0xeff6aefbe74137a98a9f4695adc184af0d99d01f37f215b303bb32f8c15ac7d6' target='_blank' title='0xeff6aefbe74137a98a9f4695adc184af0d99d01f37f215b303bb32f8c15ac7d6'>0xeff6aefbe74137…</a></td></tr>
-<tr><td class='dim'>09-11 18:33:03</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:YES qty:5 px:0.3785</td><td><a href='https://shannon-explorer.somnia.network/tx/0xf7503ff4ccb90547d224a1f54ade207bdd12aa4748aa014fd5ad2a543cee582f' target='_blank' title='0xf7503ff4ccb90547d224a1f54ade207bdd12aa4748aa014fd5ad2a543cee582f'>0xf7503ff4ccb905…</a></td></tr>
-<tr><td class='dim'>09-11 18:33:00</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>1844674407370955…</span></td></tr>
-<tr><td class='dim'>09-11 18:32:45</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:NO qty:5 px:0.5085</td><td><a href='https://shannon-explorer.somnia.network/tx/0x4d2ff79c319d8cd6fa0fb762215338d4e2ad6ffd2248390cc6ad8b244fb96391' target='_blank' title='0x4d2ff79c319d8cd6fa0fb762215338d4e2ad6ffd2248390cc6ad8b244fb96391'>0x4d2ff79c319d8c…</a></td></tr>
-<tr><td class='dim'>09-11 18:32:41</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>1844674407370955…</span></td></tr>
-<tr><td class='dim'>09-11 18:32:26</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:YES qty:5 px:0.3675</td><td><a href='https://shannon-explorer.somnia.network/tx/0x458f6e4b4212f0f7db142b10ea11698c832077632d3f4787d4f0ef0ea635e260' target='_blank' title='0x458f6e4b4212f0f7db142b10ea11698c832077632d3f4787d4f0ef0ea635e260'>0x458f6e4b4212f0…</a></td></tr>
-<tr><td class='dim'>09-11 18:32:23</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>4611686018427388…</span></td></tr>
-<tr><td class='dim'>09-11 18:32:07</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:NO qty:5 px:0.6005</td><td><a href='https://shannon-explorer.somnia.network/tx/0x8dd4c11306801de052bd9500a139a0eb3c2d0d63156bc4e6cf862fdfd63730b8' target='_blank' title='0x8dd4c11306801de052bd9500a139a0eb3c2d0d63156bc4e6cf862fdfd63730b8'>0x8dd4c11306801d…</a></td></tr>
-<tr><td class='dim'>09-11 18:32:07</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:YES qty:5 px:0.389499</td><td><a href='https://shannon-explorer.somnia.network/tx/0xedf38081750a7e42b7557430d78e572eed6720b1f21e6b9eaf18d6e500669a8a' target='_blank' title='0xedf38081750a7e42b7557430d78e572eed6720b1f21e6b9eaf18d6e500669a8a'>0xedf38081750a7e…</a></td></tr>
-<tr><td class='dim'>09-11 18:32:02</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>1106804644422573…</span></td></tr>
-<tr><td class='dim'>09-11 18:31:48</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:NO qty:5 px:0.623</td><td><a href='https://shannon-explorer.somnia.network/tx/0xb0c740b735cf3f36e1f82df774b5b6dac353381fa0cdd252ad9be009a00fa852' target='_blank' title='0xb0c740b735cf3f36e1f82df774b5b6dac353381fa0cdd252ad9be009a00fa852'>0xb0c740b735cf3f…</a></td></tr>
-<tr><td class='dim'>09-11 18:31:48</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:YES qty:5 px:0.367</td><td><a href='https://shannon-explorer.somnia.network/tx/0xcc7aa1cd30dabfdfc4248df084e4d01fdcb47d960c08733c3ccab7e703c912e6' target='_blank' title='0xcc7aa1cd30dabfdfc4248df084e4d01fdcb47d960c08733c3ccab7e703c912e6'>0xcc7aa1cd30dabf…</a></td></tr>
-<tr><td class='dim'>09-11 18:31:44</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>1106804644422573…</span></td></tr>
-<tr><td class='dim'>09-11 18:31:30</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:NO qty:5 px:0.5735</td><td><a href='https://shannon-explorer.somnia.network/tx/0xd357f34c4de3df98a9ae0206bdd2a5512723cc17d67cf6e825b35e8064a5ca20' target='_blank' title='0xd357f34c4de3df98a9ae0206bdd2a5512723cc17d67cf6e825b35e8064a5ca20'>0xd357f34c4de3df…</a></td></tr>
-<tr><td class='dim'>09-11 18:31:25</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>1106804644422573…</span></td></tr>
-<tr><td class='dim'>09-11 18:31:11</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:NO qty:5 px:0.582</td><td><a href='https://shannon-explorer.somnia.network/tx/0xccd9c8c42f1360f34e26e164d1f7341b2c62729bbb73ced27fc2976299cfdf5b' target='_blank' title='0xccd9c8c42f1360f34e26e164d1f7341b2c62729bbb73ced27fc2976299cfdf5b'>0xccd9c8c42f1360…</a></td></tr>
-<tr><td class='dim'>09-11 18:31:11</td><td style='color:#771be8'>REST</td><td>mkid:01a6f5 kind:YES qty:5 px:0.408</td><td><a href='https://shannon-explorer.somnia.network/tx/0x72ac787d199201bf55e741c47008ebe257690336710c991eb12f1b53271aba21' target='_blank' title='0x72ac787d199201bf55e741c47008ebe257690336710c991eb12f1b53271aba21'>0x72ac787d199201…</a></td></tr>
-<tr><td class='dim'>09-11 18:30:16</td><td style='color:#888'>WINDOW_SETTLE</td><td>mkid:01a6c6</td><td><span class='dim'></span></td></tr>
-<tr><td class='dim'>09-11 18:30:13</td><td style='color:#ff7b00'>PEND</td><td>mkid:01a6c6</td><td><span class='dim'></span></td></tr>
-<tr><td class='dim'>09-11 18:21:53</td><td style='color:#ff006a'>FLATTEN</td><td>side:YES</td><td><span class='dim'></span></td></tr>
-<tr><td class='dim'>09-11 18:21:49</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>8301034833169301…</span></td></tr>
-<tr><td class='dim'>09-11 18:21:35</td><td style='color:#771be8'>REST</td><td>mkid:01a6c6 kind:YES qty:5 px:0.695</td><td><a href='https://shannon-explorer.somnia.network/tx/0x7dda97606b46eae81b70f61dba500b1d81659e7be5fbe10d72b7a384c2f2011e' target='_blank' title='0x7dda97606b46eae81b70f61dba500b1d81659e7be5fbe10d72b7a384c2f2011e'>0x7dda97606b46ea…</a></td></tr>
-<tr><td class='dim'>09-11 18:21:31</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>8301034833169301…</span></td></tr>
-<tr><td class='dim'>09-11 18:21:15</td><td style='color:#771be8'>REST</td><td>mkid:01a6c6 kind:NO qty:5 px:0.186999</td><td><a href='https://shannon-explorer.somnia.network/tx/0x47c4eae16c8e05ba372b146b32b43f9c287c90f1c9d711ced27886fe415f3127' target='_blank' title='0x47c4eae16c8e05ba372b146b32b43f9c287c90f1c9d711ced27886fe415f3127'>0x47c4eae16c8e05…</a></td></tr>
-<tr><td class='dim'>09-11 18:21:15</td><td style='color:#771be8'>REST</td><td>mkid:01a6c6 kind:YES qty:5 px:0.803</td><td><a href='https://shannon-explorer.somnia.network/tx/0xf86ecfd86d4cfd2c8931fd093e63f3635656cc2f67229534faed63907b3656a5' target='_blank' title='0xf86ecfd86d4cfd2c8931fd093e63f3635656cc2f67229534faed63907b3656a5'>0xf86ecfd86d4cfd…</a></td></tr>
-<tr><td class='dim'>09-11 18:21:11</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>5902958103587059…</span></td></tr>
-<tr><td class='dim'>09-11 18:20:53</td><td style='color:#771be8'>REST</td><td>mkid:01a6c6 kind:NO qty:5 px:0.1815</td><td><a href='https://shannon-explorer.somnia.network/tx/0x8bb26d2d0c718fef831b167e01cf71a44990b9336d1ee7274c8f64c4ef5107b5' target='_blank' title='0x8bb26d2d0c718fef831b167e01cf71a44990b9336d1ee7274c8f64c4ef5107b5'>0x8bb26d2d0c718f…</a></td></tr>
 </table></div>
 </div>
 <div>
