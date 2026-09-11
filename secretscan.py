@@ -7,7 +7,7 @@ files = subprocess.run(["git", "ls-tree", "-r", "--name-only", "HEAD"],
 pats = {
     "private-key-64hex": re.compile(r"(?<![0-9a-fA-F])[0-9a-fA-F]{64}(?![0-9a-fA-F])"),
     "vm-ip": re.compile(r"20" + r"\.2" + r"\.233\.34"),
-    "vm-userhost": re.compile(r"azureuser@20"),
+    "vm-userhost": re.compile(r"azureuser" + r"@20"),
     "gh-token": re.compile(r"gh[pousr]_[0-9A-Za-z]{20,}"),
     "pem-name": re.compile(r"obel" + r"isk-key"),
     "donor-key-path": re.compile(r"BACK" + r"ED/\.env|ANCHOR" + r"_PRIVATE_KEY|CAT" + r"_GRID_KEY"),
