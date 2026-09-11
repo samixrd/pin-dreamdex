@@ -72,10 +72,14 @@ def money_rows(n=40):
         lbl, col = ICON.get(e["ev"], (e["ev"].upper(), "#888"))
         t = dt.datetime.utcfromtimestamp(e["ts"] / 1000).strftime("%m-%d %H:%M:%S")
         d = " ".join(f"{k}:{str(e[k])[:10]}" for k in ("mkid", "kind", "side", "qty", "px", "amt") if k in e)
-        tx = e.get("tx") or e.get("id") or ""
-        tx = tx[:16] + "…" if len(tx) > 16 else tx
+        raw = e.get("tx") or e.get("id") or ""
+        short = raw[:16] + "…" if len(raw) > 16 else raw
+        if raw.startswith("0x") and len(raw) > 40:
+            cell = f"<a href='{explorer}{raw}' target='_blank' title='{raw}'>{short}</a>"
+        else:
+            cell = f"<span class='dim'>{short}</span>"
         out.append(f"<tr><td class='dim'>{t}</td><td style='color:{col}'>{lbl}</td><td>{d}</td>"
-                   f"<td class='dim'>{tx}</td></tr>")
+                   f"<td>{cell}</td></tr>")
     return "\n".join(out)
 
 def paper_rows(n=24):
