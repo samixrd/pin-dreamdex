@@ -1,5 +1,7 @@
 # PIN — Yield-Aware Convergence Market Making on DreamDEX Event Contracts
 
+![PIN live monitor](docs/screenshot.png)
+
 **The venue pays makers to rest liquidity and never publishes the rulebook's key parameter.**
 dreamDEX distributes collateral yield to resting orders by
 `score = qty × exp(−(P−mid)²/2σ²) × seconds` (docs: Collateral Yield Algorithm). σ is set
