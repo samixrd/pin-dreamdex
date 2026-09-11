@@ -83,11 +83,13 @@ def paper_rows(n=24):
     for p in paper[-n:][::-1]:
         pnl = p["term_pnl"]
         col = "#ccff00" if pnl > 0 else ("#ff006a" if pnl < -1 else "#8a8a8a")
+        kf = min(1.0, p['killed_frac'])
+        pnlcell = f"{pnl:+.2f}" if p['fills'] else "<span class='dim'>no fills</span>"
         out.append(f"<tr><td class='dim'>{p['marketId']}</td><td>{p['asset']}</td>"
-                   f"<td style='color:{col};text-align:right'>{pnl:+.2f}</td>"
+                   f"<td style='color:{col};text-align:right'>{pnlcell}</td>"
                    f"<td style='text-align:right'>{p['fills']}</td>"
                    f"<td style='text-align:right'>{100*p['score_share']:.0f}%</td>"
-                   f"<td style='text-align:right'>{100*p['killed_frac']:.0f}%</td></tr>")
+                   f"<td style='text-align:right'>{100*kf:.0f}%</td></tr>")
     return "\n".join(out)
 
 maxmean = max([max(b["pin"], b["naive"]) for b in bars] + [1])
@@ -98,8 +100,8 @@ front_html = "".join(f"""
   <div class="fval">{b['pin']:+.0f}</div>
   <div class="fbar2"><div class="fnaive" style="width:{100*b['naive']/maxmean:.0f}%"></div></div>
   <div class="fval dim">{b['naive']:+.0f}</div>
-  <div class="fworst {'ok' if b['pin_worst']>=0 else 'bad'}">worst {b['pin_worst']:+.0f}</div>
-  <div class="fworst bad">worst {b['naive_worst']:+.0f}</div>
+  <div class="fworst {'ok' if b['pin_worst']>=0 else 'bad'}">worst {b['pin_worst']:+.0f} · yield {100*b['pin_shr']:.0f}%</div>
+  <div class="fworst bad">worst {b['naive_worst']:+.0f} · yield {100*b['naive_shr']:.0f}%</div>
 </div>""" for b in bars)
 
 race_html = "".join(
@@ -172,7 +174,7 @@ td {{ padding:5px 8px; border-bottom:1px solid var(--border) }}
 a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }}
 .scroll {{ max-height:340px; overflow-y:auto; border:1px solid var(--border); background:var(--bg2) }}
 .scroll::-webkit-scrollbar {{ width:6px }} .scroll::-webkit-scrollbar-thumb {{ background:var(--border-strong) }}
-.frow {{ display:grid; grid-template-columns:88px 1fr 64px 1fr 64px 108px 108px; gap:8px; align-items:center; margin:8px 0; font-size:11px }}
+.frow {{ display:grid; grid-template-columns:88px 1fr 64px 1fr 64px 170px 170px; gap:8px; align-items:center; margin:8px 0; font-size:11px }}
 .flabel {{ color:var(--dim) }}
 .fbar,.fbar2 {{ height:14px; background:var(--surface); border:1px solid var(--border); position:relative }}
 .fpin {{ position:absolute; inset:0 auto 0 0; background:linear-gradient(90deg,var(--purple),#9c4dff) }}
@@ -218,7 +220,7 @@ a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }
 <div class="cols">
 <div>
 <h2>Policy frontier — PnL / window</h2>
-<div class="sub"><span class="badge" style="color:var(--purple)">PIN touch+kill</span> vs <span class="badge">naive 2¢ maker</span> · q200 · replay on recorded books · under every σ band hypothesis</div>
+<div class="sub"><span class="badge" style="color:var(--purple)">PIN touch+kill</span> vs <span class="badge">naive 2¢ maker</span> · q200 · replay on recorded books · trade PnL is σ-invariant by design; the σ-dependent term is yield share (shown per row)</div>
 {front_html}
 </div>
 <div>
