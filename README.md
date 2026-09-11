@@ -9,8 +9,8 @@ per market on-chain and is **not exposed by any API or SDK** — the official bo
 operators to hand-set `YO_SIGMA_RAW`. 80 hackathon projects traded this venue; none mentions
 this mechanic. PIN is the first market maker whose objective function contains it.
 
-**Live monitor:** https://samixrd.github.io/pin-dreamdex/ (auto-regenerates from the running
-stack every 90 s — tx hashes link straight to the Shannon explorer)
+**Live monitor:** https://samixrd.github.io/pin-dreamdex/ — regenerated from the live VM stack every
+15 min (tx hashes link straight to the Shannon explorer; wallet cards read on-chain via `eth_call`)
 
 ```
 fund → mint-a-pair two-sided bids at d from mid → accrue yield score per second (W-banded)
@@ -53,32 +53,61 @@ on Somnia) that:
 ## Layout
 
 ```
+--- always-on (Azure VM) ---
 collector.ts    read-only recorder: books (5-level, ~2s), fills, settlements, px marks
-backfill.ts     historical market+fill sweep (resumable, indexer-503-hardened)
-pxdeep.py       52-day oracle price feed dump (1m candles, close + EMA mark, raw precision)
-pin_core.py     replay engine: order lifecycle, mint-a-pair fills, yield-score race, markout
-sweep2/3/sigma  policy grids: distance × kill × σ band × quote size
-hazard.py       empirical P(pin | normalized state) table from venue settlements
-sigma_est.py    band inference from ladder geometry + adverse curve
 paper.py        live shadow trader on the collector's stream (same policy objects)
 live.ts         real-money runner: on-chain status gate, post-only bids, expire-ts dead-man,
                 hazard kill, pre-settle flatten, redeem + claim sweep; caps: 60/window, 200 total
-dashboard.py    regenerates data/dashboard.html from the ledgers (zero synthetic data)
+publish_pages.sh + crontab: dashboard regen -> docs/ -> GitHub Pages (every 15 min)
+--- offline analysis (anywhere, run against the recorded data) ---
+backfill.ts     historical market+fill sweep (resumable, indexer-503-hardened)
+pxdeep.py       52-day oracle price feed dump (1m candles, close + EMA mark, raw precision)
+pin_core.py     replay engine: order lifecycle, mint-a-pair fills, yield-score race, markout
+sweep2/3/sweep_final  policy grids: distance × kill × σ band × quote size
+hazard.py       empirical P(pin | normalized state) table from venue settlements
+sigma_est2.py   ML band estimate from 1.88M resting-ladder observations
+dashboard.py    regenerates data/dashboard.html from ledgers + live eth_call (zero synthetic data)
+publish.py      writes compact artifacts to data/published/
 ```
 
-## Run
+## Run — 24/7 stack (the Azure VM)
+
+The live engine runs on a small Ubuntu 24.04 VM under pm2 (restart-on-fail, survives reboots);
+the laptop is never required.
 
 ```bash
-npm i                                            # markets-sdk ^0.30, viem
-cp .env.example .env                             # PIN_KEY_FILE=wallet-with-shannon-stt
-npx tsx collector.ts                             # record books/fills/settlements
+ssh azureuser@<vm>              # node 18 + python 3.12
+cd ~/pin && npm i
+
+pm2 start "npx tsx collector.ts" --name pin-collector --time
+pm2 start "python3 paper.py"     --name pin-paper
+LIVE_DRY=0 LIVE_MAX_WINDOWS=200 pm2 start "npx tsx live.ts" --name pin-live
+pm2 save                         # resurrect on boot
+
+# wallet key at data/pin_key.txt (64-hex, chmod 600) — dedicated burner, never the main key.
+# funding is self-serve: public faucet(uint256) 10k tUSDC + a small STT transfer.
+
+# GitHub Pages publish path: repo deploy key at ~/.ssh/id_deploy, Host github.com block in
+# ~/.ssh/config, and crontab:
+crontab -l
+# */15 * * * * /home/azureuser/pin/publish_pages.sh >> /home/azureuser/pin/data/pages.log 2>&1
+```
+
+Safety rails baked into live.ts: per-window cap 60 tUSDC, cumulative cap 200, wallet balance
+floor 9,700 (hard halt), order expiry = window close (dead-man), venue+on-chain-status gate
+before every write.
+
+## Run — fresh from a clone (analysis + local replay)
+
+```bash
+npm i
 python pxdeep.py                                 # 52-day price rail
 npx tsx backfill.ts 30                           # settled markets + maker fills
-python pin_core.py && python sweep2.py           # replay frontier
-python hazard.py                                 # calibrate the kill
-LIVE_DRY=1 npx tsx live.ts                       # policy dry run
-LIVE_DRY=0 npx tsx live.ts                       # real windows, hard caps
-python dashboard.py                              # publish the decomposition
+python publish.py                                # compact JSON artifacts
+python sigma_est2.py && python hazard.py         # band estimate + kill calibration
+python sweep_final.py                            # policy frontier (replay)
+LIVE_DRY=1 npx tsx live.ts                       # dry-run the money path
+python dashboard.py                              # local render of the monitor
 ```
 
 Testnet tUSDC is self-serve: public `faucet(uint256)` on the token, 10k/call (no Telegram needed).
