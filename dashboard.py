@@ -133,7 +133,7 @@ html = f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="60"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PIN — Yield-Aware Convergence MM · Somnia × dreamDEX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {{
   --bg:#0a0a0a; --bg2:#000; --surface:#101012; --raised:#161619;
@@ -143,7 +143,7 @@ html = f"""<!DOCTYPE html>
   --acid:#ccff00; --cherry:#ff006a; --coral:#ea9990; --mint:#61ea7d; --orange:#ff7b00;
 }}
 * {{ box-sizing:border-box; margin:0 }}
-body {{ background:var(--bg); color:var(--text); font:13px/1.6 'IBM Plex Mono',monospace; min-height:100vh }}
+body {{ background:var(--bg); color:var(--text); font:13px/1.6 'Inter',sans-serif; font-variant-numeric:tabular-nums; min-height:100vh }}
 .wrap {{ max-width:1280px; margin:0 auto; padding:0 26px 60px; position:relative }}
 header {{ display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border-strong); padding:26px 0 18px }}
 .logo {{ font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:700; letter-spacing:4px }}
@@ -167,7 +167,7 @@ h2::after {{ content:""; flex:1; height:1px; background:var(--border-strong) }}
 table {{ border-collapse:collapse; width:100%; font-size:11.5px }}
 th {{ color:var(--dim); text-transform:uppercase; font-size:9.5px; letter-spacing:1.2px; font-weight:500; text-align:left; padding:6px 8px; border-bottom:1px solid var(--border-strong) }}
 td {{ padding:5px 8px; border-bottom:1px solid var(--border) }}
-.mono {{ font-family:'IBM Plex Mono',monospace }}
+.mono {{ font-family:'Inter',sans-serif }}
 .dim {{ color:var(--dim) }} .ok {{ color:var(--acid) }} .bad {{ color:var(--cherry) }}
 a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }}
 .scroll {{ max-height:340px; overflow-y:auto; border:1px solid var(--border); background:var(--bg2) }}
