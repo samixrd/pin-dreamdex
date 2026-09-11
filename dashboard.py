@@ -133,7 +133,7 @@ html = f"""<!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta http-equiv="refresh" content="60"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PIN — Yield-Aware Convergence MM · Somnia × dreamDEX</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
 :root {{
   --bg:#0a0a0a; --bg2:#000; --surface:#101012; --raised:#161619;
@@ -143,13 +143,10 @@ html = f"""<!DOCTYPE html>
   --acid:#ccff00; --cherry:#ff006a; --coral:#ea9990; --mint:#61ea7d; --orange:#ff7b00;
 }}
 * {{ box-sizing:border-box; margin:0 }}
-body {{ background:var(--bg); color:var(--text); font:13px/1.6 'Source Code Pro',monospace; min-height:100vh }}
-body::before {{ content:""; position:fixed; inset:0; pointer-events:none;
-  background:radial-gradient(600px 300px at 15% -5%, var(--purple-glow), transparent 70%),
-             radial-gradient(500px 260px at 90% 0%, #ccff0010, transparent 60%) }}
-.wrap {{ max-width:1280px; margin:0 auto; padding:28px 26px 60px; position:relative }}
-header {{ display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border-strong); padding-bottom:18px }}
-.logo {{ font-size:30px; font-weight:700; letter-spacing:4px }}
+body {{ background:var(--bg); color:var(--text); font:13px/1.6 'IBM Plex Mono',monospace; min-height:100vh }}
+.wrap {{ max-width:1280px; margin:0 auto; padding:0 26px 60px; position:relative }}
+header {{ display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border-strong); padding:26px 0 18px }}
+.logo {{ font-family:'Space Grotesk',sans-serif; font-size:30px; font-weight:700; letter-spacing:4px }}
 .logo em {{ font-style:normal; color:var(--purple); text-shadow:0 0 24px var(--purple-glow) }}
 .tagline {{ color:var(--dim); font-size:11.5px; max-width:520px }}
 .livechip {{ display:inline-flex; gap:7px; align-items:center; font-size:11px; color:var(--acid); border:1px solid #ccff0033; padding:2px 9px; text-transform:uppercase; letter-spacing:1px }}
@@ -158,8 +155,8 @@ header {{ display:flex; justify-content:space-between; align-items:flex-end; bor
 .meta {{ text-align:right; font-size:10.5px; color:var(--dim) }}
 .grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:10px; margin:22px 0 }}
 .card {{ background:var(--surface); border:1px solid var(--border); padding:14px 16px 12px; position:relative; overflow:hidden }}
-.card::after {{ content:""; position:absolute; left:0; top:0; width:100%; height:2px; background:linear-gradient(90deg,var(--purple),transparent 60%) }}
-.card .v {{ font-size:23px; font-weight:600; letter-spacing:.5px }}
+.card::after {{ content:""; position:absolute; left:0; top:0; width:26px; height:2px; background:var(--purple) }}
+.card .v {{ font-family:'Space Grotesk',sans-serif; font-size:23px; font-weight:500; letter-spacing:.2px; font-variant-numeric:tabular-nums }}
 .card .v small {{ font-size:11px; color:var(--dim); font-weight:400 }}
 .card .l {{ color:var(--dim); font-size:10px; text-transform:uppercase; letter-spacing:1.4px; margin-top:2px }}
 h2 {{ font-size:12px; text-transform:uppercase; letter-spacing:2.4px; color:var(--coral); margin:34px 0 4px; display:flex; align-items:center; gap:10px }}
@@ -170,7 +167,7 @@ h2::after {{ content:""; flex:1; height:1px; background:var(--border-strong) }}
 table {{ border-collapse:collapse; width:100%; font-size:11.5px }}
 th {{ color:var(--dim); text-transform:uppercase; font-size:9.5px; letter-spacing:1.2px; font-weight:500; text-align:left; padding:6px 8px; border-bottom:1px solid var(--border-strong) }}
 td {{ padding:5px 8px; border-bottom:1px solid var(--border) }}
-.mono {{ font-family:'Source Code Pro',monospace }}
+.mono {{ font-family:'IBM Plex Mono',monospace }}
 .dim {{ color:var(--dim) }} .ok {{ color:var(--acid) }} .bad {{ color:var(--cherry) }}
 a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }}
 .scroll {{ max-height:340px; overflow-y:auto; border:1px solid var(--border); background:var(--bg2) }}
@@ -180,14 +177,14 @@ a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }
 .fbar,.fbar2 {{ height:14px; background:var(--surface); border:1px solid var(--border); position:relative }}
 .fpin {{ position:absolute; inset:0 auto 0 0; background:linear-gradient(90deg,var(--purple),#9c4dff) }}
 .fnaive {{ position:absolute; inset:0 auto 0 0; background:#3a3a40 }}
-.fval {{ text-align:right; color:var(--acid) }}
+.fval {{ text-align:right; color:var(--acid); font-family:'Space Grotesk',sans-serif; font-variant-numeric:tabular-nums }}
 .fval.dim {{ color:var(--dim) }}
 .fworst {{ text-align:right }}
 .race {{ display:grid; grid-template-columns:150px 1fr 54px; gap:10px; align-items:center; margin:7px 0; font-size:11px }}
 .rname {{ color:var(--dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap }}
 .rtrack {{ height:10px; background:var(--surface); border:1px solid var(--border) }}
 .rfill {{ display:block; height:100%; background:linear-gradient(90deg,var(--acid),#8a9900) }}
-.rpct {{ text-align:right; color:var(--acid) }}
+.rpct {{ text-align:right; color:var(--acid); font-family:'Space Grotesk',sans-serif }}
 .heat {{ color:#0a0a0a; background:var(--acid); text-align:center; font-weight:600 }}
 .note {{ margin-top:26px; padding-top:14px; border-top:1px solid var(--border); color:var(--dim); font-size:10.5px; line-height:1.7 }}
 .badge {{ display:inline-block; border:1px solid var(--border-strong); color:var(--dim); font-size:9.5px; padding:1px 7px; letter-spacing:1px; text-transform:uppercase }}
@@ -204,7 +201,8 @@ a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }
     0x2763…197a · venue 6797…a28c<br>{now}
   </div>
 </header>
-
+<nav><a href="#overview">Overview</a><a href="#edge">Edge</a><a href="#hazard">Hazard</a><a href="#ledger">Ledger</a><span class="nsep"></span><a href="#about">Provenance</a></nav>
+<section id="overview">
 <div class="grid">
   <div class="card"><div class="v">{len(fills)}</div><div class="l">on-chain fills</div></div>
   <div class="card"><div class="v">{notional:.1f} <small>tUSDC</small></div><div class="l">notional traded</div></div>
@@ -215,7 +213,8 @@ a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }
   <div class="card"><div class="v">{anatomy.get('five_min_dead_pct','—')}<small>%</small></div><div class="l">5-min windows dead</div></div>
   <div class="card"><div class="v">{anatomy.get('median_mint_pair_share',0)*100:.0f}<small>%</small></div><div class="l">fills are mint-a-pair</div></div>
 </div>
-
+</section>
+<section id="edge">
 <div class="cols">
 <div>
 <h2>Policy frontier — PnL / window</h2>
@@ -229,11 +228,14 @@ a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }
 <div class="sub" style="margin-top:10px">the incumbent ladder's own config implies σ ∈ [0.005, 0.0225] — we bracket an unpublished venue parameter from public data (<span class="mono">sigma_est.py</span>)</div>
 </div>
 </div>
-
+</section>
+<section id="hazard">
 <h2>Empirical pin hazard — P(window settles within ε of its opening line)</h2>
 <div class="sub">learned from 52 days of oracle rail × {anatomy.get('markets_recorded','?')} recorded windows · u = |ln(px/line)| / √(minutes remaining) — the kill rule fires above P≤10bp = 0.35, calibrated on THIS table, not textbook Brownian motion</div>
 {haz_html}
 
+</section>
+<section id="ledger">
 <div class="cols">
 <div>
 <h2>Live money ledger — every event is a transaction</h2>
@@ -252,7 +254,8 @@ a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }
 </table></div>
 </div>
 </div>
-
+</section>
+<section id="about">
 <div class="note">
 PROVENANCE — every figure regenerates from raw files: <span class="mono">publish.py</span> → <span class="mono">data/published/*.json</span> → this page.
 venue anatomy: {anatomy.get('markets_recorded',0)} recorded markets, {anatomy.get('dead_markets_pct','—')}% never traded, median top-maker share {anatomy.get('median_top_maker_share','—')} ·
@@ -260,6 +263,7 @@ oracle-precision curve (1-min rail vs on-chain winner): {ORACLE_NOTE} ·
 median settled distance from the line: {SD.get('settle_dist_bps_percentiles',{}).get('50','—')} bp, {SD.get('pct_lt_25bps','—')}% of windows finish within 25bp
 <br>PIN — quote geometry from the venue's own formula · kill rule from the venue's own settle history · claims from the chain. <a href="https://github.com/samixrd/pin-dreamdex">github.com/samixrd/pin-dreamdex</a>
 </div>
+</section>
 </div></body></html>"""
 
 with open(f"{DATA}/dashboard.html", "w", encoding="utf-8") as f:
