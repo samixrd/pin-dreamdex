@@ -66,7 +66,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
   </div>
   <div class="meta">
     <span class="livechip"><span class="pulse"></span> recording live</span><br>
-    0x2763…197a · venue 6797…a28c<br>2026-09-11 12:34 UTC
+    0x2763…197a · venue 6797…a28c<br>2026-09-11 12:36 UTC
   </div>
 </header>
 <nav><a href="#overview">Overview</a><a href="#edge">Edge</a><a href="#hazard">Hazard</a><a href="#ledger">Ledger</a><span class="nsep"></span><a href="#about">Provenance</a></nav>
@@ -74,7 +74,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <div class="grid">
   <div class="card"><div class="v">95</div><div class="l">on-chain fills</div></div>
   <div class="card"><div class="v">260.3 <small>tUSDC</small></div><div class="l">notional traded</div></div>
-  <div class="card"><div class="v">644</div><div class="l">orders rested</div></div>
+  <div class="card"><div class="v">648</div><div class="l">orders rested</div></div>
   <div class="card"><div class="v">7</div><div class="l">claims + merges</div></div>
   <div class="card"><div class="v">74</div><div class="l">paper windows settled</div></div>
   <div class="card"><div class="v">6,264,341</div><div class="l">book snapshots</div></div>
@@ -84,8 +84,8 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 
 <h2>Live money — wallet read from chain at render time</h2>
 <div class="grid">
-  <div class="card"><div class="v">9,892.56 <small>tUSDC</small></div><div class="l">wallet balance now (eth_call)</div></div>
-  <div class="card"><div class="v">-107.44 <small>tUSDC</small></div><div class="l">net vs 10,000 faucet grant</div></div>
+  <div class="card"><div class="v">9,897.30 <small>tUSDC</small></div><div class="l">wallet balance now (eth_call)</div></div>
+  <div class="card"><div class="v">-102.70 <small>tUSDC</small></div><div class="l">net vs 10,000 faucet grant</div></div>
   <div class="card"><div class="v">3</div><div class="l">windows closed w/ settle bookend</div></div>
   <div class="card"><div class="v">7</div><div class="l">on-chain claims + merges</div></div>
 </div>
@@ -146,6 +146,14 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <div class="sub">https://shannon-explorer.somnia.network/tx/…</div>
 <div class="scroll"><table>
 <tr><th>time</th><th>event</th><th>detail</th><th>tx / id</th></tr>
+<tr><td class='dim'>09-11 12:35:26</td><td style='color:#ff006a'>FLATTEN</td><td>side:NO</td><td><span class='dim'></span></td></tr>
+<tr><td class='dim'>09-11 12:35:24</td><td style='color:#ff006a'>FLATTEN</td><td>side:YES</td><td><span class='dim'></span></td></tr>
+<tr><td class='dim'>09-11 12:35:18</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>9776774359066063…</span></td></tr>
+<tr><td class='dim'>09-11 12:35:03</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:NO qty:5 px:0.3735</td><td><a href='https://shannon-explorer.somnia.network/tx/0x5af8a79161ad2ea15f701f751090044c5dd85915af42717c33f5e5bf445ecb44' target='_blank' title='0x5af8a79161ad2ea15f701f751090044c5dd85915af42717c33f5e5bf445ecb44'>0x5af8a79161ad2e…</a></td></tr>
+<tr><td class='dim'>09-11 12:35:03</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:YES qty:5 px:0.616499</td><td><a href='https://shannon-explorer.somnia.network/tx/0x9ad9b7e99553fd7449f23c0a6e6ef6a2e8c06228b7350938ab7ac9f8243d2845' target='_blank' title='0x9ad9b7e99553fd7449f23c0a6e6ef6a2e8c06228b7350938ab7ac9f8243d2845'>0x9ad9b7e99553fd…</a></td></tr>
+<tr><td class='dim'>09-11 12:34:43</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:NO qty:5 px:0.3715</td><td><a href='https://shannon-explorer.somnia.network/tx/0xd9c2843677a8263aa71399856702c9b39c1d22206ad97f87b57a6699e807e1b3' target='_blank' title='0xd9c2843677a8263aa71399856702c9b39c1d22206ad97f87b57a6699e807e1b3'>0xd9c2843677a826…</a></td></tr>
+<tr><td class='dim'>09-11 12:34:43</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:YES qty:5 px:0.618499</td><td><a href='https://shannon-explorer.somnia.network/tx/0xdb25b711b139ad63f65ce311a4490d9086d9536db876dc368d8d0ddc50c5529f' target='_blank' title='0xdb25b711b139ad63f65ce311a4490d9086d9536db876dc368d8d0ddc50c5529f'>0xdb25b711b139ad…</a></td></tr>
+<tr><td class='dim'>09-11 12:34:38</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>1106804644422573…</span></td></tr>
 <tr><td class='dim'>09-11 12:34:22</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:NO qty:5 px:0.291</td><td><a href='https://shannon-explorer.somnia.network/tx/0x637b6cc4c05ec678783251937fe59971423e5915d13d00d7ac7abeea8b3bc401' target='_blank' title='0x637b6cc4c05ec678783251937fe59971423e5915d13d00d7ac7abeea8b3bc401'>0x637b6cc4c05ec6…</a></td></tr>
 <tr><td class='dim'>09-11 12:34:22</td><td style='color:#771be8'>REST</td><td>mkid:01a28e kind:YES qty:5 px:0.699</td><td><a href='https://shannon-explorer.somnia.network/tx/0x5a003874b820baa2500d982cbd7f5e8a53fe60b881163e2624c5a54ca56d9dc0' target='_blank' title='0x5a003874b820baa2500d982cbd7f5e8a53fe60b881163e2624c5a54ca56d9dc0'>0x5a003874b820ba…</a></td></tr>
 <tr><td class='dim'>09-11 12:34:17</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>2767011611056433…</span></td></tr>
@@ -178,14 +186,6 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <tr><td class='dim'>09-11 12:25:10</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>9223372036854785…</span></td></tr>
 <tr><td class='dim'>09-11 12:24:53</td><td style='color:#771be8'>REST</td><td>mkid:01a260 kind:NO qty:5 px:0.3035</td><td><a href='https://shannon-explorer.somnia.network/tx/0x063bffa84d12a75d3ef05272a1bf62ee2d94bfd84e5ff581f01141ab90a817cc' target='_blank' title='0x063bffa84d12a75d3ef05272a1bf62ee2d94bfd84e5ff581f01141ab90a817cc'>0x063bffa84d12a7…</a></td></tr>
 <tr><td class='dim'>09-11 12:24:53</td><td style='color:#771be8'>REST</td><td>mkid:01a260 kind:YES qty:5 px:0.6865</td><td><a href='https://shannon-explorer.somnia.network/tx/0x763523e6190ab1f58c262fb9df1bc9740dacc6981915f0d27dfd7b0c077c37ac' target='_blank' title='0x763523e6190ab1f58c262fb9df1bc9740dacc6981915f0d27dfd7b0c077c37ac'>0x763523e6190ab1…</a></td></tr>
-<tr><td class='dim'>09-11 12:24:49</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>2767011611056433…</span></td></tr>
-<tr><td class='dim'>09-11 12:24:34</td><td style='color:#771be8'>REST</td><td>mkid:01a260 kind:NO qty:5 px:0.205999</td><td><a href='https://shannon-explorer.somnia.network/tx/0x3777c1e4a01872aa2db7259757199cee3f7528811a0b3af88a54847705d377bc' target='_blank' title='0x3777c1e4a01872aa2db7259757199cee3f7528811a0b3af88a54847705d377bc'>0x3777c1e4a01872…</a></td></tr>
-<tr><td class='dim'>09-11 12:24:29</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>2767011611056433…</span></td></tr>
-<tr><td class='dim'>09-11 12:24:15</td><td style='color:#771be8'>REST</td><td>mkid:01a260 kind:NO qty:5 px:0.110999</td><td><a href='https://shannon-explorer.somnia.network/tx/0x91016fd60391291a8875d41b627304fb1b0fdeb350bb1a450343a42f433269ab' target='_blank' title='0x91016fd60391291a8875d41b627304fb1b0fdeb350bb1a450343a42f433269ab'>0x91016fd6039129…</a></td></tr>
-<tr><td class='dim'>09-11 12:24:10</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>2767011611056433…</span></td></tr>
-<tr><td class='dim'>09-11 12:24:09</td><td style='color:#666'>CANCEL</td><td></td><td><span class='dim'>9223372036854785…</span></td></tr>
-<tr><td class='dim'>09-11 12:23:41</td><td style='color:#771be8'>REST</td><td>mkid:01a260 kind:NO qty:5 px:0.108499</td><td><a href='https://shannon-explorer.somnia.network/tx/0x0054822f3810b5ab8b15a6489b842734b9171b0a12523cf48ee7779466887168' target='_blank' title='0x0054822f3810b5ab8b15a6489b842734b9171b0a12523cf48ee7779466887168'>0x0054822f3810b5…</a></td></tr>
-<tr><td class='dim'>09-11 12:23:41</td><td style='color:#771be8'>REST</td><td>mkid:01a260 kind:YES qty:5 px:0.8815</td><td><a href='https://shannon-explorer.somnia.network/tx/0xfef870d94ba1396b58a411a2662de8663dc0e3cf437de79261df40885b7a2749' target='_blank' title='0xfef870d94ba1396b58a411a2662de8663dc0e3cf437de79261df40885b7a2749'>0xfef870d94ba139…</a></td></tr>
 </table></div>
 </div>
 <div>
