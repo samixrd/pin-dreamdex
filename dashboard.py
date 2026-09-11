@@ -1,9 +1,10 @@
-# PIN dashboard generator — reads ONLY real recorded data, emits data/dashboard.html.
-# Sections: 1) live money ledger timeline 2) paper decomposition 3) score-race share
-# 4) hazard table 5) policy frontier 6) venue anatomy stats. No synthetic numbers.
-import json, os, statistics, time, datetime as dt
+# PIN dashboard generator — Somnia-branded (tokens extracted live from somnia.network CSS).
+# Renders ONLY from real recorded data in data/. Zero mock numbers: every figure traces to a file.
+import json, os, statistics, datetime as dt
 
 DATA = "data"
+PUB = f"{DATA}/published"
+
 def lj(f):
     try:
         with open(f"{DATA}/{f}", encoding="utf-8") as fh:
@@ -11,125 +12,256 @@ def lj(f):
     except FileNotFoundError:
         return []
 
+def pj(name):
+    for p in (f"{PUB}/{name}", f"{DATA}/{name}"):
+        if os.path.exists(p):
+            return json.load(open(p))
+    return {}
+
 live = lj("live_ledger.jsonl")
 paper = lj("paper_ledger.jsonl")
-hazard = json.load(open(f"{DATA}/hazard_table.json")) if os.path.exists(f"{DATA}/hazard_table.json") else {}
-sigma = json.load(open(f"{DATA}/sweep_sigma.json")) if os.path.exists(f"{DATA}/sweep_sigma.json") else {}
-size = json.load(open(f"{DATA}/sweep_v3_size.json")) if os.path.exists(f"{DATA}/sweep_v3_size.json") else {}
-hist = lj("history.jsonl")
+hazard = pj("hazard_table.json")
+final = pj("sweep_final.json")
+sigma = pj("sweep_sigma02.json")
+anatomy = pj("venue_anatomy.json")
+oracle = pj("oracle_precision.json")
+SD = pj("settle_distances.json")
 
-def fast_count(path):
-    n = 0
-    with open(path, "rb") as f:
-        for chunk in iter(lambda: f.read(1 << 20), b""):
-            n += chunk.count(b"\n")
-    return n
-
-try: BOOKS_LINES = fast_count(f"{DATA}/books.jsonl")
-except FileNotFoundError: BOOKS_LINES = 0
-
-# --- money summary (fills/flatten/redeem are real; term uses settled rows) ---
-rests = [e for e in live if e["ev"] == "rest"]
 fills = [e for e in live if e["ev"] == "fill"]
-flats = [e for e in live if e["ev"] == "flatten"]
+rests = [e for e in live if e["ev"] == "rest"]
 redeems = [e for e in live if e["ev"] in ("redeem", "claim_sweep")]
+merges = [e for e in live if e["ev"] == "merge"]
 settles = [e for e in live if e["ev"] == "settle"]
-spent = sum(e["qty"] * e["px"] for e in fills)
-exposure_max = max([sum(e["qty"] * e["px"] for e in rests[:i+1]) for i in range(len(rests))], default=0)
+notional = sum(e["qty"] * e["px"] for e in fills)
 
-paper_pnl = [p["term_pnl"] for p in paper]
-paper_share = [p["score_share"] for p in paper]
-
-def esc(s): return str(s).replace("&","&amp;").replace("<","&lt;")
-
-def money_rows():
+# frontier: best touch configs vs naive at each sigma (PnL mean)
+def front_bars():
     out = []
-    for e in live[-60:]:
-        t = dt.datetime.utcfromtimestamp(e["ts"] / 1000).strftime("%H:%M:%S")
-        icon = {"rest": "🟦", "fill": "🟨", "cancel": "⬜", "flatten": "🟥", "settle": "⚖️", "redeem": "✅", "claim_sweep": "✅", "no_settle": "⌛", "redeem_err": "❌"}.get(e["ev"], "•")
-        detail = " ".join(f"{k}={e[k]}" for k in ("mkid", "kind", "side", "qty", "px", "amt", "winner_up", "trades") if k in e)
-        tx = (e.get("tx") or "")[:14]
-        out.append(f"<tr><td>{t}</td><td>{icon} {e['ev']}</td><td class='mono'>{esc(detail)}</td><td class='mono'>{tx}</td></tr>")
-    return "\n".join(out)
+    for sg in ("0.005", "0.01", "0.0225"):
+        pk = f"s{sg}-q200-1t-pk0.6"; nk = f"s{sg}-q200-2c-pk0.6"
+        p_, n_ = final.get(pk) or {}, final.get(nk) or {}
+        out.append({"sigma": sg, "pin": p_.get("pnl_mean", 0), "naive": n_.get("pnl_mean", 0),
+                    "pin_worst": p_.get("worst", 0), "naive_worst": n_.get("worst", 0),
+                    "pin_shr": p_.get("score_share_med", 0), "naive_shr": n_.get("score_share_med", 0)})
+    return out
+bars = front_bars()
 
-def hazard_rows():
-    out = []
-    for k, v in sorted(hazard.items(), key=lambda x: float(x[0].split('-')[0])):
-        out.append(f"<tr><td class='mono'>{k}</td><td>{v['n']}</td>" + "".join(f"<td>{v[ke]:.2f}</td>" for ke in sorted(v) if ke != 'n' and not ke.isdigit() and '-' not in ke and '.' in ke) + "</tr>")
-    return "\n".join(out)
+# yield score race at operating sigma
+race = []
+for k, v in sorted((final or {}).items()):
+    if not v or not k.startswith("s0.01-q200"): continue
+    race.append((k.split("-", 1)[1], v["score_share_med"]))
+race.sort(key=lambda x: -x[1])
 
-def hazard_rows2():
-    rows = []
-    for k, v in sorted(hazard.items(), key=lambda x: float(x[0].split('-')[0])):
-        cells = [f"{val:.2f}" for ek, val in v.items() if ek != "n"]
-        rows.append("<tr><td class='mono'>" + k + "</td><td>" + str(v.get('n','')) + "</td>" + "".join(f"<td>{c}</td>" for c in cells) + "</tr>")
-    return "\n".join(rows)
-
-eps_cols = []
+haz_rows = []
 if hazard:
-    any_v = next(iter(hazard.values()))
-    eps_cols = [k for k in any_v if k != "n"]
+    eps = [k for k in next(iter(hazard.values())) if k != "n"]
+    for k, v in sorted(hazard.items(), key=lambda x: float(x[0].split("-")[0])):
+        haz_rows.append((k, v.get("n", ""), [v.get(e, "") for e in eps]))
+    haz_eps = [f"{round(float(e)*1e4)}bp" for e in eps]
+else:
+    haz_eps = []
 
-front = []
-for tag, tbl in (("σ-sweep", sigma), ("size-sweep", size)):
-    for k, v in sorted(tbl.items(), key=lambda x: -x[1]["pnl_mean"]):
-        front.append((tag, k, v))
-front.sort(key=lambda x: -x[2]["pnl_mean"])
+def money_rows(n=40):
+    out = []
+    ICON = {"rest": ("REST", "#771be8"), "fill": ("FILL", "#ccff00"), "cancel": ("CANCEL", "#666"),
+            "flatten": ("FLATTEN", "#ff006a"), "merge": ("MERGE", "#61ea7d"), "settle": ("SETTLE", "#ea9990"),
+            "redeem": ("CLAIM", "#61ea7d"), "claim_sweep": ("CLAIM", "#61ea7d"),
+            "no_settle": ("WAIT", "#888"), "redeem_pending": ("PEND", "#ff7b00"), "redeem_err": ("ERR", "#ff006a")}
+    for e in live[-n:][::-1]:
+        lbl, col = ICON.get(e["ev"], (e["ev"].upper(), "#888"))
+        t = dt.datetime.utcfromtimestamp(e["ts"] / 1000).strftime("%m-%d %H:%M:%S")
+        d = " ".join(f"{k}:{str(e[k])[:10]}" for k in ("mkid", "kind", "side", "qty", "px", "amt") if k in e)
+        tx = e.get("tx") or e.get("id") or ""
+        tx = tx[:16] + "…" if len(tx) > 16 else tx
+        out.append(f"<tr><td class='dim'>{t}</td><td style='color:{col}'>{lbl}</td><td>{d}</td>"
+                   f"<td class='dim'>{tx}</td></tr>")
+    return "\n".join(out)
 
-html = f"""<!DOCTYPE html><html><head><meta charset="utf-8"><title>PIN — yield-aware convergence MM · live monitor</title>
+def paper_rows(n=24):
+    out = []
+    for p in paper[-n:][::-1]:
+        pnl = p["term_pnl"]
+        col = "#ccff00" if pnl > 0 else ("#ff006a" if pnl < -1 else "#8a8a8a")
+        out.append(f"<tr><td class='dim'>{p['marketId']}</td><td>{p['asset']}</td>"
+                   f"<td style='color:{col};text-align:right'>{pnl:+.2f}</td>"
+                   f"<td style='text-align:right'>{p['fills']}</td>"
+                   f"<td style='text-align:right'>{100*p['score_share']:.0f}%</td>"
+                   f"<td style='text-align:right'>{100*p['killed_frac']:.0f}%</td></tr>")
+    return "\n".join(out)
+
+maxmean = max([max(b["pin"], b["naive"]) for b in bars] + [1])
+front_html = "".join(f"""
+<div class="frow">
+  <div class="flabel">σ={b['sigma']}</div>
+  <div class="fbar"><div class="fpin" style="width:{100*b['pin']/maxmean:.0f}%"></div></div>
+  <div class="fval">{b['pin']:+.0f}</div>
+  <div class="fbar2"><div class="fnaive" style="width:{100*b['naive']/maxmean:.0f}%"></div></div>
+  <div class="fval dim">{b['naive']:+.0f}</div>
+  <div class="fworst {'ok' if b['pin_worst']>=0 else 'bad'}">worst {b['pin_worst']:+.0f}</div>
+  <div class="fworst bad">worst {b['naive_worst']:+.0f}</div>
+</div>""" for b in bars)
+
+race_html = "".join(
+    f"<div class='race'><span class='rname'>{lbl}</span><span class='rtrack'><span class='rfill' style='width:{max(1,100*shr):.1f}%'></span></span><span class='rpct'>{100*shr:.1f}%</span></div>"
+    for lbl, shr in race[:8])
+
+haz_html = ""
+if haz_rows:
+    haz_html = "<table><tr><th>state u = |r|/√t<sub>rem</sub></th><th>n</th>" + "".join(f"<th>{c}</th>" for c in haz_eps) + "</tr>"
+    for k, n, cells in haz_rows:
+        tds = ""
+        for c in cells:
+            if c == "":
+                tds += "<td>—</td>"
+            else:
+                a = max(0.06, min(1.0, float(c)))
+                fg = "#0a0a0a" if a > 0.35 else "#9ab03a"
+                tds += f"<td style='background:rgba(204,255,0,{a:.2f});color:{fg};text-align:center;font-weight:600'>{a:.2f}</td>"
+        haz_html += f"<tr><td class='mono'>{k}</td><td class='dim'>{n}</td>{tds}</tr>"
+    haz_html += "</table>"
+
+ORACLE_NOTE = ""
+if oracle:
+    o = oracle["rail_vs_chain_winner"]
+    ORACLE_NOTE = " · ".join(f"{k}: {v[1]}/{v[0]}" for k, v in o.items())
+
+now = dt.datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC")
+explorer = "https://shannon-explorer.somnia.network/tx/"
+
+html = f"""<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PIN — Yield-Aware Convergence MM · Somnia × dreamDEX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root {{ color-scheme: dark }}
-body {{ background:#09090B; color:#F0F0F2; font:14px/1.5 'Inter',system-ui,sans-serif; margin:28px }}
-h1 {{ font-size:22px; letter-spacing:.4px }} h2 {{ font-size:15px; margin-top:26px; color:#F0B90B }}
-.grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:10px; margin:14px 0 }}
-.card {{ background:#111114; border:1px solid #232326; padding:12px 14px }}
-.card .v {{ font-size:22px; font-weight:600 }} .card .l {{ color:#8B8B93; font-size:12px }}
-table {{ border-collapse:collapse; width:100%; font-size:12.5px }}
-th,td {{ border-bottom:1px solid #1E1E22; padding:5px 8px; text-align:left }}
-th {{ color:#8B8B93; font-weight:500 }} .mono {{ font-family:'Fragment Mono',monospace; font-size:12px }}
-.ok {{ color:#3DD68C }} .warn {{ color:#F0B90B }} .bad {{ color:#F87171 }}
-.note {{ color:#8B8B93; font-size:12px; margin-top:4px }}
-</style></head><body>
-<h1>PIN <span style="color:#8B8B93;font-weight:400">· yield-aware convergence market maker on DreamDEX Event Contracts</span></h1>
-<div class="note">all figures below are generated from recorded testnet data (chain 50312). regen: <span class="mono">python dashboard.py</span> · {dt.datetime.utcnow().strftime('%Y-%m-%d %H:%M')} UTC</div>
+:root {{
+  --bg:#0a0a0a; --bg2:#000; --surface:#101012; --raised:#161619;
+  --border:#1c1c1c; --border-strong:#2f2f2f;
+  --text:#f5f5f5; --dim:#8a8a93;
+  --purple:#771be8; --purple-glow:#771be855;
+  --acid:#ccff00; --cherry:#ff006a; --coral:#ea9990; --mint:#61ea7d; --orange:#ff7b00;
+}}
+* {{ box-sizing:border-box; margin:0 }}
+body {{ background:var(--bg); color:var(--text); font:13px/1.6 'Source Code Pro',monospace; min-height:100vh }}
+body::before {{ content:""; position:fixed; inset:0; pointer-events:none;
+  background:radial-gradient(600px 300px at 15% -5%, var(--purple-glow), transparent 70%),
+             radial-gradient(500px 260px at 90% 0%, #ccff0010, transparent 60%) }}
+.wrap {{ max-width:1280px; margin:0 auto; padding:28px 26px 60px; position:relative }}
+header {{ display:flex; justify-content:space-between; align-items:flex-end; border-bottom:1px solid var(--border-strong); padding-bottom:18px }}
+.logo {{ font-size:30px; font-weight:700; letter-spacing:4px }}
+.logo em {{ font-style:normal; color:var(--purple); text-shadow:0 0 24px var(--purple-glow) }}
+.tagline {{ color:var(--dim); font-size:11.5px; max-width:520px }}
+.livechip {{ display:inline-flex; gap:7px; align-items:center; font-size:11px; color:var(--acid); border:1px solid #ccff0033; padding:2px 9px; text-transform:uppercase; letter-spacing:1px }}
+.pulse {{ width:7px; height:7px; background:var(--acid); border-radius:50%; animation:p 1.6s infinite }}
+@keyframes p {{ 0%,100% {{ opacity:1 }} 50% {{ opacity:.25 }} }}
+.meta {{ text-align:right; font-size:10.5px; color:var(--dim) }}
+.grid {{ display:grid; grid-template-columns:repeat(auto-fit,minmax(158px,1fr)); gap:10px; margin:22px 0 }}
+.card {{ background:var(--surface); border:1px solid var(--border); padding:14px 16px 12px; position:relative; overflow:hidden }}
+.card::after {{ content:""; position:absolute; left:0; top:0; width:100%; height:2px; background:linear-gradient(90deg,var(--purple),transparent 60%) }}
+.card .v {{ font-size:23px; font-weight:600; letter-spacing:.5px }}
+.card .v small {{ font-size:11px; color:var(--dim); font-weight:400 }}
+.card .l {{ color:var(--dim); font-size:10px; text-transform:uppercase; letter-spacing:1.4px; margin-top:2px }}
+h2 {{ font-size:12px; text-transform:uppercase; letter-spacing:2.4px; color:var(--coral); margin:34px 0 4px; display:flex; align-items:center; gap:10px }}
+h2::after {{ content:""; flex:1; height:1px; background:var(--border-strong) }}
+.sub {{ color:var(--dim); font-size:11px; margin-bottom:12px }}
+.cols {{ display:grid; grid-template-columns:1fr 1fr; gap:26px }}
+@media (max-width:900px) {{ .cols {{ grid-template-columns:1fr }} }}
+table {{ border-collapse:collapse; width:100%; font-size:11.5px }}
+th {{ color:var(--dim); text-transform:uppercase; font-size:9.5px; letter-spacing:1.2px; font-weight:500; text-align:left; padding:6px 8px; border-bottom:1px solid var(--border-strong) }}
+td {{ padding:5px 8px; border-bottom:1px solid var(--border) }}
+.mono {{ font-family:'Source Code Pro',monospace }}
+.dim {{ color:var(--dim) }} .ok {{ color:var(--acid) }} .bad {{ color:var(--cherry) }}
+a {{ color:var(--purple); text-decoration:none }} a:hover {{ color:var(--acid) }}
+.scroll {{ max-height:340px; overflow-y:auto; border:1px solid var(--border); background:var(--bg2) }}
+.scroll::-webkit-scrollbar {{ width:6px }} .scroll::-webkit-scrollbar-thumb {{ background:var(--border-strong) }}
+.frow {{ display:grid; grid-template-columns:88px 1fr 64px 1fr 64px 108px 108px; gap:8px; align-items:center; margin:8px 0; font-size:11px }}
+.flabel {{ color:var(--dim) }}
+.fbar,.fbar2 {{ height:14px; background:var(--surface); border:1px solid var(--border); position:relative }}
+.fpin {{ position:absolute; inset:0 auto 0 0; background:linear-gradient(90deg,var(--purple),#9c4dff) }}
+.fnaive {{ position:absolute; inset:0 auto 0 0; background:#3a3a40 }}
+.fval {{ text-align:right; color:var(--acid) }}
+.fval.dim {{ color:var(--dim) }}
+.fworst {{ text-align:right }}
+.race {{ display:grid; grid-template-columns:150px 1fr 54px; gap:10px; align-items:center; margin:7px 0; font-size:11px }}
+.rname {{ color:var(--dim); overflow:hidden; text-overflow:ellipsis; white-space:nowrap }}
+.rtrack {{ height:10px; background:var(--surface); border:1px solid var(--border) }}
+.rfill {{ display:block; height:100%; background:linear-gradient(90deg,var(--acid),#8a9900) }}
+.rpct {{ text-align:right; color:var(--acid) }}
+.heat {{ color:#0a0a0a; background:var(--acid); text-align:center; font-weight:600 }}
+.note {{ margin-top:26px; padding-top:14px; border-top:1px solid var(--border); color:var(--dim); font-size:10.5px; line-height:1.7 }}
+.badge {{ display:inline-block; border:1px solid var(--border-strong); color:var(--dim); font-size:9.5px; padding:1px 7px; letter-spacing:1px; text-transform:uppercase }}
+</style></head><body><div class="wrap">
+
+<header>
+  <div>
+    <div class="logo">P<em>◆</em>IN</div>
+    <div class="tagline">yield-aware convergence market maker · dreamdex event contracts · somnia shannon (50312)<br>
+    the venue pays makers exp(−d²/2σ²)·sec to rest — σ is unpublished — we estimate it, quote against it, and kill on its own settlement statistics</div>
+  </div>
+  <div class="meta">
+    <span class="livechip"><span class="pulse"></span> recording live</span><br>
+    0x2763…197a · venue 6797…a28c<br>{now}
+  </div>
+</header>
 
 <div class="grid">
-<div class="card"><div class="v">{len(settles)}</div><div class="l">live windows settled</div></div>
-<div class="card"><div class="v">{len(fills)}</div><div class="l">real fills (on-chain)</div></div>
-<div class="card"><div class="v">{spent:.2f} <span style="font-size:12px">tUSDC</span></div><div class="l">notional filled</div></div>
-<div class="card"><div class="v">{len(rests)}</div><div class="l">orders rested (tx-logged)</div></div>
-<div class="card"><div class="v">{len(redeems)}</div><div class="l">redemptions</div></div>
-<div class="card"><div class="v">{len(paper)}</div><div class="l">paper windows shadowed</div></div>
+  <div class="card"><div class="v">{len(fills)}</div><div class="l">on-chain fills</div></div>
+  <div class="card"><div class="v">{notional:.1f} <small>tUSDC</small></div><div class="l">notional traded</div></div>
+  <div class="card"><div class="v">{len(rests)}</div><div class="l">orders rested</div></div>
+  <div class="card"><div class="v">{len(redeems)+len(merges)}</div><div class="l">claims + merges</div></div>
+  <div class="card"><div class="v">{len(paper)}</div><div class="l">paper windows settled</div></div>
+  <div class="card"><div class="v">{anatomy.get('book_snapshots',0):,}</div><div class="l">book snapshots</div></div>
+  <div class="card"><div class="v">{anatomy.get('five_min_dead_pct','—')}<small>%</small></div><div class="l">5-min windows dead</div></div>
+  <div class="card"><div class="v">{anatomy.get('median_mint_pair_share',0)*100:.0f}<small>%</small></div><div class="l">fills are mint-a-pair</div></div>
 </div>
 
-<h2>Money ledger — every event is an on-chain tx</h2>
-<table><tr><th>time</th><th>event</th><th>detail</th><th>tx</th></tr>{money_rows()}</table>
-
-<h2>Paper shadow PnL — per-window settlement decomposition</h2>
-<div class="note">policy d=0.5¢, kill = P(pin@10bp) &gt; 0.35 (hazard-calibrated), q=50 contracts/side</div>
-<table><tr><th>market</th><th>asset</th><th>settle PnL</th><th>fills</th><th>yield score share</th><th>killed frac</th></tr>
-{''.join(f"<tr><td class='mono'>{p['marketId']}</td><td>{p['asset']}</td><td class='{'ok' if p['term_pnl']>0 else ('bad' if p['term_pnl']<-1 else '')}'>{p['term_pnl']:.2f}</td><td>{p['fills']}</td><td>{100*p['score_share']:.0f}%</td><td>{100*p['killed_frac']:.0f}%</td></tr>" for p in paper[-20:])}
-</table>
-<div class="note">median paper PnL {statistics.median(paper_pnl) if paper_pnl else '—'} · median score share {100*statistics.median(paper_share) if paper_share else '—':.0f}%</div>
-
-<h2>Empirical pin hazard (learned from {len(hist)}+ settled windows, 52-day rail)</h2>
-<div class="note">u = |ln(px/line)| / √(minutes remaining) — normalized distance-through-time. P = probability window settles within ε of its line.</div>
-<table><tr><th>u bucket</th><th>n</th>{''.join(f"<th>ε={int(float(c)*1e4)}bp</th>" for c in eps_cols)}</tr>{hazard_rows2()}</table>
-
-<h2>Policy frontier (replay, real recorded books)</h2>
-<table><tr><th>source</th><th>config</th><th>PnL mean</th><th>worst</th><th>win%</th><th>score share</th></tr>
-{''.join(f"<tr><td>{t}</td><td class='mono'>{esc(k)}</td><td class='{'ok' if v['pnl_mean']>0 else 'bad'}'>{v['pnl_mean']}</td><td>{v['worst']}</td><td>{v['win_pct']}%</td><td>{100*v['score_share_med']:.1f}%</td></tr>" for t, k, v in front[:14])}
-</table>
-
-<h2>Venue anatomy (recorded)</h2>
-<div class="grid">
-<div class="card"><div class="v">{100*sum(1 for h in hist if (h.get('tradeCount') or 0)==0)/max(1,len(hist)):.0f}%</div><div class="l">recorded markets dead (0 trades)</div></div>
-<div class="card"><div class="v">{BOOKS_LINES:,}</div><div class="l">order-book snapshots recorded</div></div>
-<div class="card"><div class="v">{sum(1 for l in open(f'{DATA}/px_deep.jsonl')):,}</div><div class="l">price-rail candles (52d)</div></div>
-<div class="card"><div class="v">{len(set(h['marketId'] for h in hist))}</div><div class="l">settled markets w/ maker fills</div></div>
+<div class="cols">
+<div>
+<h2>Policy frontier — PnL / window</h2>
+<div class="sub"><span class="badge" style="color:var(--purple)">PIN touch+kill</span> vs <span class="badge">naive 2¢ maker</span> · q200 · replay on recorded books · under every σ band hypothesis</div>
+{front_html}
 </div>
-<div class="note" style="margin-top:22px">PIN — quote geometry from the venue's own yield formula; kill rule from its own settle distribution; claims from its own chain.</div>
-</body></html>"""
+<div>
+<h2>Yield score race — our share of the venue's OI subsidy</h2>
+<div class="sub">computed per second from rivals' own resting ladders in the recorded book (σ=0.01 · q200)</div>
+{race_html}
+<div class="sub" style="margin-top:10px">the incumbent ladder's own config implies σ ∈ [0.005, 0.0225] — we bracket an unpublished venue parameter from public data (<span class="mono">sigma_est.py</span>)</div>
+</div>
+</div>
+
+<h2>Empirical pin hazard — P(window settles within ε of its opening line)</h2>
+<div class="sub">learned from 52 days of oracle rail × {anatomy.get('markets_recorded','?')} recorded windows · u = |ln(px/line)| / √(minutes remaining) — the kill rule fires above P≤10bp = 0.35, calibrated on THIS table, not textbook Brownian motion</div>
+{haz_html}
+
+<div class="cols">
+<div>
+<h2>Live money ledger — every event is a transaction</h2>
+<div class="sub">{explorer}…</div>
+<div class="scroll"><table>
+<tr><th>time</th><th>event</th><th>detail</th><th>tx / id</th></tr>
+{money_rows()}
+</table></div>
+</div>
+<div>
+<h2>Paper shadow PnL — per-window settlement</h2>
+<div class="sub">identical policy objects, live book stream, 50-contract quotes</div>
+<div class="scroll"><table>
+<tr><th>window</th><th>asset</th><th style="text-align:right">settle PnL</th><th style="text-align:right">fills</th><th style="text-align:right">score share</th><th style="text-align:right">killed</th></tr>
+{paper_rows()}
+</table></div>
+</div>
+</div>
+
+<div class="note">
+PROVENANCE — every figure regenerates from raw files: <span class="mono">publish.py</span> → <span class="mono">data/published/*.json</span> → this page.
+venue anatomy: {anatomy.get('markets_recorded',0)} recorded markets, {anatomy.get('dead_markets_pct','—')}% never traded, median top-maker share {anatomy.get('median_top_maker_share','—')} ·
+oracle-precision curve (1-min rail vs on-chain winner): {ORACLE_NOTE} ·
+median settled distance from the line: {SD.get('settle_dist_bps_percentiles',{}).get('50','—')} bp, {SD.get('pct_lt_25bps','—')}% of windows finish within 25bp
+<br>PIN — quote geometry from the venue's own formula · kill rule from the venue's own settle history · claims from the chain. <a href="https://github.com/samixrd/pin-dreamdex">github.com/samixrd/pin-dreamdex</a>
+</div>
+</div></body></html>"""
+
 with open(f"{DATA}/dashboard.html", "w", encoding="utf-8") as f:
     f.write(html)
-print("dashboard written:", len(html), "bytes; live events:", len(live), "paper windows:", len(paper))
+print(f"dashboard regenerated: {len(html):,} bytes | live events {len(live)} | paper {len(paper)} | fills {len(fills)} notional {notional:.1f}")
