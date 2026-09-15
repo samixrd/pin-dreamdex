@@ -66,7 +66,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
   </div>
   <div class="meta">
     <span class="livechip"><span class="pulse"></span> recording live</span><br>
-    0x2763…197a · venue 6797…a28c<br>2026-09-15 02:45 UTC
+    0x2763…197a · venue 6797…a28c<br>2026-09-15 03:00 UTC
   </div>
 </header>
 <nav><a href="#overview">Overview</a><a href="#edge">Edge</a><a href="#hazard">Hazard</a><a href="#ledger">Ledger</a><span class="nsep"></span><a href="#about">Provenance</a></nav>
@@ -76,7 +76,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
   <div class="card"><div class="v">387.6 <small>tUSDC</small></div><div class="l">notional traded</div></div>
   <div class="card"><div class="v">2012</div><div class="l">orders rested</div></div>
   <div class="card"><div class="v">31</div><div class="l">claims + merges</div></div>
-  <div class="card"><div class="v">181</div><div class="l">paper windows settled</div></div>
+  <div class="card"><div class="v">187</div><div class="l">paper windows settled</div></div>
   <div class="card"><div class="v">6,264,341</div><div class="l">book snapshots</div></div>
   <div class="card"><div class="v">20.9<small>%</small></div><div class="l">5-min windows dead</div></div>
   <div class="card"><div class="v">50<small>%</small></div><div class="l">fills are mint-a-pair</div></div>
@@ -193,6 +193,12 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <div class="sub">identical policy objects, live book stream, 50-contract quotes</div>
 <div class="scroll"><table>
 <tr><th>window</th><th>asset</th><th style="text-align:right">settle PnL</th><th style="text-align:right">fills</th><th style="text-align:right">score share</th><th style="text-align:right">killed</th></tr>
+<tr><td class='dim'>01bcc2</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>86%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01bcc1</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>74%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01bcc6</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-32.70</td><td style='text-align:right'>2</td><td style='text-align:right'>69%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01bcc5</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>62%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01bccb</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>17%</td><td style='text-align:right'>81%</td></tr>
+<tr><td class='dim'>01bccc</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-5.00</td><td style='text-align:right'>1</td><td style='text-align:right'>66%</td><td style='text-align:right'>0%</td></tr>
 <tr><td class='dim'>01bcb9</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>78%</td><td style='text-align:right'>2%</td></tr>
 <tr><td class='dim'>01bcba</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>90%</td><td style='text-align:right'>0%</td></tr>
 <tr><td class='dim'>01bcbc</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>100%</td></tr>
@@ -211,12 +217,6 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <tr><td class='dim'>01bcb8</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>87%</td><td style='text-align:right'>7%</td></tr>
 <tr><td class='dim'>01bcac</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>65%</td><td style='text-align:right'>7%</td></tr>
 <tr><td class='dim'>01bcab</td><td>BTC</td><td style='color:#ff006a;text-align:right'>-110.85</td><td style='text-align:right'>10</td><td style='text-align:right'>46%</td><td style='text-align:right'>9%</td></tr>
-<tr><td class='dim'>01bc9f</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bca0</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bca5</td><td>BTC</td><td style='color:#ccff00;text-align:right'>+109.30</td><td style='text-align:right'>11</td><td style='text-align:right'>22%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bca6</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>58%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bca9</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>69%</td></tr>
-<tr><td class='dim'>01bcaa</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>58%</td><td style='text-align:right'>0%</td></tr>
 </table></div>
 </div>
 </div>
