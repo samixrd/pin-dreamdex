@@ -66,7 +66,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
   </div>
   <div class="meta">
     <span class="livechip"><span class="pulse"></span> recording live</span><br>
-    0x2763…197a · venue 6797…a28c<br>2026-09-16 04:00 UTC
+    0x2763…197a · venue 6797…a28c<br>2026-09-16 04:15 UTC
   </div>
 </header>
 <nav><a href="#overview">Overview</a><a href="#edge">Edge</a><a href="#hazard">Hazard</a><a href="#ledger">Ledger</a><span class="nsep"></span><a href="#about">Provenance</a></nav>
@@ -76,7 +76,7 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
   <div class="card"><div class="v">387.6 <small>tUSDC</small></div><div class="l">notional traded</div></div>
   <div class="card"><div class="v">2012</div><div class="l">orders rested</div></div>
   <div class="card"><div class="v">31</div><div class="l">claims + merges</div></div>
-  <div class="card"><div class="v">226</div><div class="l">paper windows settled</div></div>
+  <div class="card"><div class="v">238</div><div class="l">paper windows settled</div></div>
   <div class="card"><div class="v">6,264,341</div><div class="l">book snapshots</div></div>
   <div class="card"><div class="v">20.9<small>%</small></div><div class="l">5-min windows dead</div></div>
   <div class="card"><div class="v">50<small>%</small></div><div class="l">fills are mint-a-pair</div></div>
@@ -193,6 +193,18 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <div class="sub">identical policy objects, live book stream, 50-contract quotes</div>
 <div class="scroll"><table>
 <tr><th>window</th><th>asset</th><th style="text-align:right">settle PnL</th><th style="text-align:right">fills</th><th style="text-align:right">score share</th><th style="text-align:right">killed</th></tr>
+<tr><td class='dim'>01c060</td><td>BTC</td><td style='color:#ff006a;text-align:right'>-184.62</td><td style='text-align:right'>11</td><td style='text-align:right'>65%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01c061</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-257.30</td><td style='text-align:right'>12</td><td style='text-align:right'>72%</td><td style='text-align:right'>1%</td></tr>
+<tr><td class='dim'>01c074</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>88%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01c072</td><td>BTC</td><td style='color:#ff006a;text-align:right'>-194.50</td><td style='text-align:right'>11</td><td style='text-align:right'>34%</td><td style='text-align:right'>1%</td></tr>
+<tr><td class='dim'>01c073</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>75%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01c075</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>90%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01c077</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>57%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01c076</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>25%</td><td style='text-align:right'>36%</td></tr>
+<tr><td class='dim'>01c07a</td><td>BTC</td><td style='color:#ccff00;text-align:right'>+31.45</td><td style='text-align:right'>1</td><td style='text-align:right'>86%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01c07b</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-15.60</td><td style='text-align:right'>1</td><td style='text-align:right'>79%</td><td style='text-align:right'>3%</td></tr>
+<tr><td class='dim'>01c07f</td><td>ETH</td><td style='color:#ccff00;text-align:right'>+3.70</td><td style='text-align:right'>2</td><td style='text-align:right'>76%</td><td style='text-align:right'>0%</td></tr>
+<tr><td class='dim'>01c07e</td><td>BTC</td><td style='color:#ccff00;text-align:right'>+8.93</td><td style='text-align:right'>1</td><td style='text-align:right'>79%</td><td style='text-align:right'>0%</td></tr>
 <tr><td class='dim'>01c06b</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-341.45</td><td style='text-align:right'>11</td><td style='text-align:right'>38%</td><td style='text-align:right'>0%</td></tr>
 <tr><td class='dim'>01c06a</td><td>BTC</td><td style='color:#ff006a;text-align:right'>-244.65</td><td style='text-align:right'>14</td><td style='text-align:right'>40%</td><td style='text-align:right'>0%</td></tr>
 <tr><td class='dim'>01c070</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>65%</td><td style='text-align:right'>0%</td></tr>
@@ -205,18 +217,6 @@ a { color:var(--purple); text-decoration:none } a:hover { color:var(--acid) }
 <tr><td class='dim'>01bcf6</td><td>ETH</td><td style='color:#ccff00;text-align:right'>+29.62</td><td style='text-align:right'>1</td><td style='text-align:right'>92%</td><td style='text-align:right'>0%</td></tr>
 <tr><td class='dim'>01bcf7</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>72%</td><td style='text-align:right'>0%</td></tr>
 <tr><td class='dim'>01bcf5</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>89%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bcf8</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-18.20</td><td style='text-align:right'>1</td><td style='text-align:right'>89%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bcfa</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-21.57</td><td style='text-align:right'>1</td><td style='text-align:right'>87%</td><td style='text-align:right'>12%</td></tr>
-<tr><td class='dim'>01bcf9</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bcd1</td><td>BTC</td><td style='color:#ff006a;text-align:right'>-49.95</td><td style='text-align:right'>5</td><td style='text-align:right'>64%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bcd2</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>60%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bcec</td><td>ETH</td><td style='color:#ff006a;text-align:right'>-8.30</td><td style='text-align:right'>1</td><td style='text-align:right'>72%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bceb</td><td>BTC</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>67%</td><td style='text-align:right'>0%</td></tr>
-<tr><td class='dim'>01bce4</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>67%</td><td style='text-align:right'>1%</td></tr>
-<tr><td class='dim'>01bce3</td><td>BTC</td><td style='color:#ff006a;text-align:right'>-51.55</td><td style='text-align:right'>2</td><td style='text-align:right'>85%</td><td style='text-align:right'>1%</td></tr>
-<tr><td class='dim'>01bce7</td><td>BTC</td><td style='color:#ff006a;text-align:right'>-30.85</td><td style='text-align:right'>1</td><td style='text-align:right'>88%</td><td style='text-align:right'>20%</td></tr>
-<tr><td class='dim'>01bce8</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>89%</td><td style='text-align:right'>6%</td></tr>
-<tr><td class='dim'>01bcee</td><td>ETH</td><td style='color:#8a8a8a;text-align:right'><span class='dim'>no fills</span></td><td style='text-align:right'>0</td><td style='text-align:right'>0%</td><td style='text-align:right'>0%</td></tr>
 </table></div>
 </div>
 </div>
